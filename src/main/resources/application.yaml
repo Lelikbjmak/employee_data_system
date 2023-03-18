@@ -1,1 +1,26 @@
 # ----- Properties -----
+
+spring:
+  output:
+    ansi:
+      enabled: ALWAYS
+  datasource:
+    url: jdbc:postgresql://localhost:5432/employee_data_system
+    username: postgres
+    password: root
+    driver-class-name: org.postgresql.Driver
+  jpa:
+    show-sql: true
+    hibernate:
+      ddl-auto: update
+      format_sql: true
+
+password-encoder:
+  salt-length: 17
+  hash-length: 32
+  parallelism: 1
+  memory: 23552
+  iterations: 2
+
+server:
+  port: 7878
