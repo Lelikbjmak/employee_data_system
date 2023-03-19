@@ -5,6 +5,7 @@ import lombok.*;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 @Getter
 @Setter
@@ -22,5 +23,5 @@ public class RegistrationResponseDto {
 
     private String message;
 
-    private List<RegistrationDto> content;
+    private List<EmployeeDto> content;
 }
