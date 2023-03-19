@@ -22,15 +22,17 @@ public class User implements UserDetails {
 
     @Id
     @Getter
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
     @Column(unique = true)
     private String username;
+
     private String password;
 
     @Getter
     @Column(unique = true)
     private String mail;
+
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(name = "usersRoles",
             joinColumns = @JoinColumn(name = "user_id", referencedColumnName = "id"),
@@ -39,7 +41,9 @@ public class User implements UserDetails {
     private Set<Role> roles;
 
     @Getter
-    @OneToOne(cascade = CascadeType.ALL, mappedBy = "user")
+    @MapsId
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "id")
     private Employee employee;
 
     private boolean accountNonExpired;

@@ -9,7 +9,6 @@ import java.util.Date;
 @Setter
 @Getter
 @Builder
-@ToString
 @NoArgsConstructor
 @AllArgsConstructor
 @Table(name = "employees")
@@ -28,7 +27,9 @@ public class Employee {
     @Temporal(TemporalType.DATE)
     private Date hireDate;
 
-    @OneToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "user_id", referencedColumnName = "id")
+    @Getter
+    @OneToOne(mappedBy = "employee", cascade = {CascadeType.REFRESH, CascadeType.REMOVE},
+            fetch = FetchType.LAZY)
     private User user;
+
 }
