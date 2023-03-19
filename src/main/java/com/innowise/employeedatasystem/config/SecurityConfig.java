@@ -1,5 +1,6 @@
 package com.innowise.employeedatasystem.config;
 
+import com.innowise.employeedatasystem.security.AccessDeniedHandlerImpl;
 import com.innowise.employeedatasystem.security.AuthenticationEntryPointImpl;
 import com.innowise.employeedatasystem.security.JwtAuthenticationFilter;
 import lombok.RequiredArgsConstructor;
@@ -42,6 +43,8 @@ public class SecurityConfig {
 
     private final AuthenticationEntryPointImpl authenticationEntryPoint;
 
+    private final AccessDeniedHandlerImpl accessDeniedHandler;
+
     @Bean
     public Argon2PasswordEncoder argon2PasswordEncoder() {
         return new Argon2PasswordEncoder(saltLength, hashLength, parallelism, memory, iterations);
@@ -82,6 +85,7 @@ public class SecurityConfig {
                 .and()
                 .exceptionHandling()
                 .authenticationEntryPoint(authenticationEntryPoint)
+                .accessDeniedHandler(accessDeniedHandler)
 
                 .and()
                 .authenticationProvider(authenticationProvider())
