@@ -1,15 +1,24 @@
 package com.innowise.employeedatasystem.service;
 
 import com.innowise.employeedatasystem.entity.Employee;
+import com.innowise.employeedatasystem.exception.EmployeeIsNotFoundException;
 
+import java.util.Date;
 import java.util.List;
-import java.util.Optional;
 
 public interface EmployeeService {
 
-    Optional<Employee> findEmployeeByUserUsername(String username);
+    Employee findEmployeeByUserUsername(String username);
 
     Employee save(Employee employee);
 
     List<Employee> getAllEmployees();
+
+    void deleteEmployees(List<Employee> deleteEmployeeList);
+
+    Employee getEmployeeById(Long id) throws EmployeeIsNotFoundException;
+
+    List<Employee> editEmployees(List<Employee> editEmployeeList);
+
+    Employee findByFirstLastMiddleNameAndHireDate(String firstName, String lastName, String middleName, Date hireDate);
 }
