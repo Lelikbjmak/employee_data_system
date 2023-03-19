@@ -13,6 +13,7 @@ import java.util.Set;
 @AllArgsConstructor
 public class UserDto {
 
+
     private String username;
 
     private String password;
@@ -20,4 +21,12 @@ public class UserDto {
     private String mail;
 
     private Set<String> roles;
+
+    private boolean enabled;
+
+    private boolean accountNonExpired;
+
+    private boolean accountNonLocked;
+
+    private boolean credentialsNonExpired;
 }
