@@ -11,7 +11,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class RegistrationDto {
 
-    private UserDto userDto;
+    private RegistrationUserDto userDto;
 
-    private EmployeeDto employeeDto;
+    private RegistrationEmployeeDto employeeDto;
 }
