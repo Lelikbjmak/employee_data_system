@@ -13,6 +13,8 @@ import java.util.Date;
 @AllArgsConstructor
 public class EmployeeDto {
 
+    private Long id;
+
     private String firstName;
 
     private String middleName;
@@ -20,4 +22,6 @@ public class EmployeeDto {
     private String lastName;
 
     private Date hireDate;
+
+    private UserDto userDto;
 }
