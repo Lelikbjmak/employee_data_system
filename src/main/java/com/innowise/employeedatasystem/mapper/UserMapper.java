@@ -1,5 +1,6 @@
 package com.innowise.employeedatasystem.mapper;
 
+import com.innowise.employeedatasystem.dto.RegistrationUserDto;
 import com.innowise.employeedatasystem.dto.UserDto;
 import com.innowise.employeedatasystem.entity.User;
 import lombok.RequiredArgsConstructor;
@@ -11,16 +12,16 @@ public class UserMapper {
 
     private final RoleSetMapper roleSetMapper;
 
-    public User toUserEntity(UserDto registrationUserDto) {
+    public User toUserEntity(RegistrationUserDto registrationUserDto) {
         return User.builder()
                 .username(registrationUserDto.getUsername())
                 .password(registrationUserDto.getPassword())
                 .roles(roleSetMapper.toRoleEntitySet(registrationUserDto.getRoles()))
                 .mail(registrationUserDto.getMail())
+                .enabled(true)
+                .accountNonLocked(true)
                 .accountNonExpired(true)
                 .credentialsNonExpired(true)
-                .accountNonLocked(true)
-                .enabled(true)
                 .build();
     }
 
@@ -30,6 +31,10 @@ public class UserMapper {
                 .password(user.getPassword())
                 .mail(user.getMail())
                 .roles(roleSetMapper.toRoleDtoSet(user.getRoles()))
+                .enabled(user.isEnabled())
+                .accountNonExpired(user.isAccountNonExpired())
+                .accountNonLocked(user.isAccountNonLocked())
+                .credentialsNonExpired(user.isCredentialsNonExpired())
                 .build();
     }
 
