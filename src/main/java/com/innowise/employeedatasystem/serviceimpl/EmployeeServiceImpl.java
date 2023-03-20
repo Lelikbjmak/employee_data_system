@@ -4,6 +4,7 @@ import com.innowise.employeedatasystem.entity.Employee;
 import com.innowise.employeedatasystem.exception.EmployeeIsNotFoundException;
 import com.innowise.employeedatasystem.repo.EmployeeRepository;
 import com.innowise.employeedatasystem.service.EmployeeService;
+import com.innowise.employeedatasystem.util.GeneralConstant;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -16,14 +17,13 @@ import java.util.Map;
 @RequiredArgsConstructor
 public class EmployeeServiceImpl implements EmployeeService {
 
-    private static final String EMPLOYEE_IS_NOT_FOUND_BY_ID_EXCEPTION_MESSAGE = "Employee is not found.";
-
     private final EmployeeRepository employeeRepository;
 
     @Override
     public Employee findEmployeeByUserUsername(String username) {
-        // TODO: extract employee from user
-        return null;
+        return employeeRepository.findByUser_username(username).orElseThrow(() ->
+                new EmployeeIsNotFoundException(GeneralConstant.Message.EMPLOYEE_IS_NOT_FOUND_BY_ID_EXCEPTION_MESSAGE,
+                        Instant.now(), Map.of(GeneralConstant.Field.USERNAME_FIELD, username)));
     }
 
     @Override
@@ -44,8 +44,8 @@ public class EmployeeServiceImpl implements EmployeeService {
     @Override
     public Employee getEmployeeById(Long id) throws EmployeeIsNotFoundException {
         return employeeRepository.findById(id).orElseThrow(() ->
-                new EmployeeIsNotFoundException(EMPLOYEE_IS_NOT_FOUND_BY_ID_EXCEPTION_MESSAGE,
-                        Instant.now(), Map.of("Id", id)));
+                new EmployeeIsNotFoundException(GeneralConstant.Message.EMPLOYEE_IS_NOT_FOUND_BY_ID_EXCEPTION_MESSAGE,
+                        Instant.now(), Map.of(GeneralConstant.Field.ID_FIELD, id)));
     }
 
     @Override
@@ -56,12 +56,12 @@ public class EmployeeServiceImpl implements EmployeeService {
     @Override
     public Employee findByFirstLastMiddleNameAndHireDate(String firstName, String lastName, String middleName, Date hireDate) {
         return employeeRepository.findByFirstNameAndLastNameAndMiddleNameAndHireDate(firstName, lastName, middleName, hireDate).orElseThrow(() ->
-                new EmployeeIsNotFoundException(EMPLOYEE_IS_NOT_FOUND_BY_ID_EXCEPTION_MESSAGE,
+                new EmployeeIsNotFoundException(GeneralConstant.Message.EMPLOYEE_IS_NOT_FOUND_BY_ID_EXCEPTION_MESSAGE,
                         Instant.now(), Map.of(
-                        "firstName", firstName,
-                        "lastName", lastName,
-                        "middleName", middleName,
-                        "hireDate", hireDate
+                        GeneralConstant.Field.EMPLOYEE_FIRST_NAME_FIELD, firstName,
+                        GeneralConstant.Field.EMPLOYEE_LAST_NAME_FIELD, lastName,
+                        GeneralConstant.Field.EMPLOYEE_MIDDLE_NAME_FIELD, middleName,
+                        GeneralConstant.Field.EMPLOYEE_HIRE_DATE_FIELD, hireDate
                 )));
     }
 
