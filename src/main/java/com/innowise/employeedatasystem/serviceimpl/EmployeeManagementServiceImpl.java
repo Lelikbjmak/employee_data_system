@@ -95,7 +95,7 @@ public class EmployeeManagementServiceImpl implements EmployeeManagementService 
 
     @Override
     public EmployeeDto getEmployeeByUserUsername(String username) {
-        return employeeMapper.toEmployeeDto(userService.findByUsername(username).getEmployee());
+        return employeeMapper.toEmployeeDto(employeeService.findEmployeeByUserUsername(username));
     }
 
     @Override
