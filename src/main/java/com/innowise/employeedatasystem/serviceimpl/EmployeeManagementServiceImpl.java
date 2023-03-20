@@ -6,6 +6,7 @@ import com.innowise.employeedatasystem.entity.User;
 import com.innowise.employeedatasystem.mapper.EmployeeMapper;
 import com.innowise.employeedatasystem.mapper.UserMapper;
 import com.innowise.employeedatasystem.service.EmployeeManagementService;
+import com.innowise.employeedatasystem.util.GeneralConstant;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
@@ -40,7 +41,7 @@ public class EmployeeManagementServiceImpl implements EmployeeManagementService 
                 .timestamp(new Date())
                 .code(status.value())
                 .status(status.name())
-                .message("Successfully added employees.")
+                .message(GeneralConstant.Message.EMPLOYEE_SUCCESSFULLY_ADDED_MESSAGE)
                 .content(registrationDtoList)
                 .build();
     }

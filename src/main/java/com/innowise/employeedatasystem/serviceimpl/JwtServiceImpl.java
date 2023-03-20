@@ -2,6 +2,7 @@ package com.innowise.employeedatasystem.serviceimpl;
 
 import com.innowise.employeedatasystem.exception.InvalidTokenException;
 import com.innowise.employeedatasystem.service.JwtService;
+import com.innowise.employeedatasystem.util.GeneralConstant;
 import io.jsonwebtoken.*;
 import lombok.NoArgsConstructor;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -25,7 +26,7 @@ public class JwtServiceImpl extends JwtService {
                 .setClaims(new HashMap<>())
                 .setSubject(userDetails.getUsername())
                 .setIssuedAt(new Date(System.currentTimeMillis()))
-                .setExpiration(new Date(System.currentTimeMillis() + JWT_TOKEN_VALIDITY))   // 2 hours
+                .setExpiration(new Date(System.currentTimeMillis() + GeneralConstant.Feature.JWT_TOKEN_VALIDITY))   // 2 hours
                 .signWith(getSignInKey(), SignatureAlgorithm.HS256)
                 .compact();
     }

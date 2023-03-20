@@ -4,6 +4,7 @@ import com.innowise.employeedatasystem.entity.User;
 import com.innowise.employeedatasystem.exception.UserIsNotFoundException;
 import com.innowise.employeedatasystem.repo.UserRepository;
 import com.innowise.employeedatasystem.service.UserService;
+import com.innowise.employeedatasystem.util.GeneralConstant;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.argon2.Argon2PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -15,7 +16,6 @@ import java.util.Map;
 @RequiredArgsConstructor
 public class UserServiceImpl implements UserService {
 
-    private static final String USERNAME_IS_NOT_FOUND_EXCEPTION_MESSAGE = "User is not found";
 
     private final UserRepository userRepository;
 
@@ -24,7 +24,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public User findByUsername(String username) {
         return userRepository.findByUsername(username).orElseThrow(() ->
-                new UserIsNotFoundException(USERNAME_IS_NOT_FOUND_EXCEPTION_MESSAGE, Instant.now(), Map.of("Username", username)));
+                new UserIsNotFoundException(GeneralConstant.Message.USER_IS_NOT_FOUND_EXCEPTION_MESSAGE, Instant.now(), Map.of("Username", username)));
     }
 
     @Override

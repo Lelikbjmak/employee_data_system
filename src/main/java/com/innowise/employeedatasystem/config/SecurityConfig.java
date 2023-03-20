@@ -3,6 +3,7 @@ package com.innowise.employeedatasystem.config;
 import com.innowise.employeedatasystem.security.AccessDeniedHandlerImpl;
 import com.innowise.employeedatasystem.security.AuthenticationEntryPointImpl;
 import com.innowise.employeedatasystem.security.JwtAuthenticationFilter;
+import com.innowise.employeedatasystem.util.ApiConstant;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
@@ -73,7 +74,7 @@ public class SecurityConfig {
                 .csrf().disable()
                 .authorizeHttpRequests()
 
-                .requestMatchers("/api/auth/signIn")
+                .requestMatchers(ApiConstant.Security.NOT_SECURED_ROUTES.get(ApiConstant.ApiPath.SIGN_IN))
                 .permitAll()
                 .anyRequest()
                 .authenticated()

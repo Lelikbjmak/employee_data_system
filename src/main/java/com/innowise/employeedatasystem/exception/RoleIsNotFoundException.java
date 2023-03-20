@@ -9,9 +9,9 @@ import java.util.NoSuchElementException;
 @Getter
 public class RoleIsNotFoundException extends NoSuchElementException {
 
-    private Instant timestamp;
+    private final Instant timestamp;
 
-    private Map<String, Object> additional;
+    private final Map<String, Object> additional;
 
     public RoleIsNotFoundException(String message, Instant instant, Map<String, Object> additional) {
         super(message);

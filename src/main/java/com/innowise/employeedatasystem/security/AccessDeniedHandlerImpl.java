@@ -2,6 +2,7 @@ package com.innowise.employeedatasystem.security;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.innowise.employeedatasystem.dto.AccessDeniedResponseDto;
+import com.innowise.employeedatasystem.util.GeneralConstant;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
@@ -21,8 +22,6 @@ public class AccessDeniedHandlerImpl implements AccessDeniedHandler {
 
     private final ObjectMapper objectMapper;
 
-    private static final String ACCESS_DENIED_EXCEPTION_MESSAGE = "Access denied. Not compliant authorities.";
-
     @Override
     public void handle(HttpServletRequest request, HttpServletResponse response,
                        AccessDeniedException accessDeniedException) throws IOException {
@@ -34,7 +33,7 @@ public class AccessDeniedHandlerImpl implements AccessDeniedHandler {
                 .status(status.name())
                 .code(status.value())
                 .path(request.getServletPath())
-                .message(ACCESS_DENIED_EXCEPTION_MESSAGE)
+                .message(GeneralConstant.Message.ACCESS_DENIED_EXCEPTION_MESSAGE)
                 .build();
 
         response.setContentType(MediaType.APPLICATION_JSON_VALUE);

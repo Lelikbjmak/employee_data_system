@@ -1,6 +1,7 @@
 package com.innowise.employeedatasystem.service;
 
 import com.innowise.employeedatasystem.exception.InvalidTokenException;
+import com.innowise.employeedatasystem.util.GeneralConstant;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
@@ -13,10 +14,6 @@ import java.util.Date;
 import java.util.function.Function;
 
 public abstract class JwtService {
-
-    private static final String SECRET_KEY = "2B4D6251655468576D5A7134743777217A25432A462D4A404E635266556A586E";
-    protected static final long JWT_TOKEN_VALIDITY = 1000L * 60 * 60 * 2;  // 2 hours
-    public static final String JWT_COOKIE_NAME = "token";
 
     public abstract String generateToken(UserDetails userDetails);
 
@@ -44,7 +41,7 @@ public abstract class JwtService {
     }
 
     protected static Key getSignInKey() {
-        byte[] keyBytes = Decoders.BASE64.decode(SECRET_KEY);
+        byte[] keyBytes = Decoders.BASE64.decode(GeneralConstant.Feature.JWT_TOKEN_SECRET_KEY);
         return Keys.hmacShaKeyFor(keyBytes);
     }
 
