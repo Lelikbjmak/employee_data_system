@@ -4,6 +4,7 @@ import com.innowise.employeedatasystem.entity.Role;
 import com.innowise.employeedatasystem.entity.RoleEnum;
 import com.innowise.employeedatasystem.exception.RoleIsNotFoundException;
 import com.innowise.employeedatasystem.serviceimpl.RoleServiceImpl;
+import com.innowise.employeedatasystem.util.GeneralConstant;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
@@ -17,8 +18,6 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class RoleSetMapper {
 
-    private static final String ROLE_IS_NOT_FOUND_EXCEPTION_MESSAGE = "Role is not found.";
-
     private final RoleServiceImpl roleService;
 
     public Set<Role> toRoleEntitySet(Set<String> roles) {
@@ -29,8 +28,8 @@ public class RoleSetMapper {
             try {
                 roleSet.add(roleService.findByRole(RoleEnum.valueOf(role)));
             } catch (IllegalArgumentException e) {
-                throw new RoleIsNotFoundException(ROLE_IS_NOT_FOUND_EXCEPTION_MESSAGE,
-                        Instant.now(), Map.of("Role", role));
+                throw new RoleIsNotFoundException(GeneralConstant.Message.ROLE_IS_NOT_FOUND_EXCEPTION_MESSAGE,
+                        Instant.now(), Map.of(GeneralConstant.Field.ROLE_FIELD, role));
             }
         });
 

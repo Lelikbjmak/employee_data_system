@@ -9,9 +9,9 @@ import java.util.NoSuchElementException;
 @Getter
 public class UserIsNotFoundException extends NoSuchElementException {
 
-    private Instant timestamp;
+    private final Instant timestamp;
 
-    private Map<String, Object> additional;
+    private final Map<String, Object> additional;
 
     public UserIsNotFoundException(String message, Instant timestamp, Map<String, Object> additional) {
         super(message);

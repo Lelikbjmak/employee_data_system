@@ -1,5 +1,6 @@
 package com.innowise.employeedatasystem.entity;
 
+import com.innowise.employeedatasystem.util.EntityConstant;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -11,7 +12,7 @@ import java.util.Set;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@Table(name = "roles")
+@Table(name = EntityConstant.Table.TABLE_ROLES)
 public class Role {
 
     @Id
@@ -22,7 +23,7 @@ public class Role {
     @Enumerated(EnumType.STRING)
     private RoleEnum role;
 
-    @ManyToMany(mappedBy = "roles")
+    @ManyToMany(mappedBy = EntityConstant.Column.ROLES)
     private Set<User> userSet;
 
 }

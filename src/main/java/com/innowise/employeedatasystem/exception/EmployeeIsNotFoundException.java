@@ -9,9 +9,9 @@ import java.util.NoSuchElementException;
 @Getter
 public class EmployeeIsNotFoundException extends NoSuchElementException {
 
-    private Instant timestamp;
+    private final Instant timestamp;
 
-    private Map<String, Object> additional;
+    private final Map<String, Object> additional;
 
     public EmployeeIsNotFoundException(String message, Instant instant, Map<String, Object> additional) {
         super(message);

@@ -1,6 +1,7 @@
 package com.innowise.employeedatasystem.entity;
 
 
+import com.innowise.employeedatasystem.util.EntityConstant;
 import jakarta.persistence.*;
 import lombok.*;
 import org.springframework.security.core.GrantedAuthority;
@@ -17,7 +18,7 @@ import java.util.stream.Collectors;
 @ToString
 @NoArgsConstructor
 @AllArgsConstructor
-@Table(name = "users")
+@Table(name = EntityConstant.Table.TABLE_USERS)
 public class User implements UserDetails {
 
     @Id
@@ -34,16 +35,16 @@ public class User implements UserDetails {
     private String mail;
 
     @ManyToMany(fetch = FetchType.EAGER)
-    @JoinTable(name = "usersRoles",
-            joinColumns = @JoinColumn(name = "user_id", referencedColumnName = "id"),
-            inverseJoinColumns = @JoinColumn(name = "role_id", referencedColumnName = "id"))
+    @JoinTable(name = EntityConstant.Table.TABLE_USERS_ROLES,
+            joinColumns = @JoinColumn(name = EntityConstant.Column.USER_ID, referencedColumnName = EntityConstant.Column.ID),
+            inverseJoinColumns = @JoinColumn(name = EntityConstant.Column.ROLE_ID, referencedColumnName = EntityConstant.Column.ID))
     @Getter
     private Set<Role> roles;
 
     @Getter
     @MapsId
     @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "id")
+    @JoinColumn(name = EntityConstant.Column.ID)
     private Employee employee;
 
     private boolean accountNonExpired;

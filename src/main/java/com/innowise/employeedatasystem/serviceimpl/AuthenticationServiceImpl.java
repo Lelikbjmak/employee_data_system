@@ -9,6 +9,7 @@ import com.innowise.employeedatasystem.repo.UserRepository;
 import com.innowise.employeedatasystem.service.AuthenticationService;
 import com.innowise.employeedatasystem.service.JwtService;
 import com.innowise.employeedatasystem.service.UserService;
+import com.innowise.employeedatasystem.util.GeneralConstant;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -85,7 +86,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
                 .status(status.name())
                 .token(token)
                 .timestamp(new Date())
-                .message("Successfully authenticated.")
+                .message(GeneralConstant.Message.SUCCESSFULLY_AUTHENTICATED_MESSAGE)
                 .build();
     }
 }

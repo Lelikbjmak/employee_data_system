@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.innowise.employeedatasystem.dto.AuthenticationSuccessResponseDto;
 import com.innowise.employeedatasystem.exception.InvalidTokenException;
 import com.innowise.employeedatasystem.service.JwtService;
+import com.innowise.employeedatasystem.util.GeneralConstant;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -12,6 +13,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.lang.NonNull;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -41,13 +43,13 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
         final String authenticationHeader = request.getHeader(HttpHeaders.AUTHORIZATION);
 
-        if (authenticationHeader == null || !authenticationHeader.startsWith("Bearer ")) {
+        if (authenticationHeader == null || !authenticationHeader.startsWith(GeneralConstant.Feature.BEARER_TOKEN_HEADER)) {
             log.info("Bearer token is null");
             filterChain.doFilter(request, response);
             return;
         }
 
-        String jwtToken = authenticationHeader.substring(7);
+        String jwtToken = authenticationHeader.substring(GeneralConstant.Feature.BEARER_TOKEN_START_INDEX);
 
         try {
 
@@ -73,9 +75,6 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                 }
             }
 
-            request.setAttribute("username", username);
-
-
         } catch (InvalidTokenException exception) {
 
             HttpStatus status = HttpStatus.UNAUTHORIZED;
@@ -90,8 +89,8 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                     .message(exception.getMessage())
                     .build();
 
-            response.setContentType("application/json");
-            response.setHeader(HttpHeaders.CONTENT_TYPE, "application/json");
+            response.setContentType(MediaType.APPLICATION_JSON_VALUE);
+            response.setHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE);
             response.setStatus(status.value());
             response.getOutputStream().print(objectMapper.writeValueAsString(authenticationResponse));
             return;

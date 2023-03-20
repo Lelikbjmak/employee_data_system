@@ -1,5 +1,6 @@
 package com.innowise.employeedatasystem.entity;
 
+import com.innowise.employeedatasystem.util.EntityConstant;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -11,7 +12,7 @@ import java.util.Date;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@Table(name = "employees")
+@Table(name = EntityConstant.Table.TABLE_EMPLOYEES)
 public class Employee {
 
     @Id
@@ -28,7 +29,7 @@ public class Employee {
     private Date hireDate;
 
     @Getter
-    @OneToOne(mappedBy = "employee", cascade = {CascadeType.REFRESH, CascadeType.REMOVE},
+    @OneToOne(mappedBy = EntityConstant.Column.EMPLOYEE, cascade = {CascadeType.REFRESH, CascadeType.REMOVE},
             fetch = FetchType.LAZY)
     private User user;
 

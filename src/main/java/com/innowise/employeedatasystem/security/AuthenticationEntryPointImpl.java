@@ -6,8 +6,7 @@ import com.innowise.employeedatasystem.dto.AuthenticationFailedResponseDto;
 import com.innowise.employeedatasystem.entity.User;
 import com.innowise.employeedatasystem.exception.JwtAuthenticationException;
 import com.innowise.employeedatasystem.repo.UserRepository;
-import com.innowise.employeedatasystem.service.UserService;
-import com.innowise.employeedatasystem.serviceimpl.UserServiceImpl;
+import com.innowise.employeedatasystem.util.GeneralConstant;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -42,21 +41,19 @@ public class AuthenticationEntryPointImpl implements AuthenticationEntryPoint {
 
             if (exception.getStatus().equals(AuthenticationErrorStatus.USERNAME)) {
 
-                additional.put("username", exception.getUsername());
-                additional.put("password", exception.getPassword());
+                additional.put(GeneralConstant.Field.USERNAME_FIELD, exception.getUsername());
+                additional.put(GeneralConstant.Field.PASSWORD_FIELD, exception.getPassword());
 
             } else {
 
-                User user = userRepository.findByUsername(exception.getUsername()).get();
-
-                if (exception.getStatus().equals(AuthenticationErrorStatus.PASSWORD)) {
-                    additional.put("attempts to sign in left", 0);
-                }
-
-                if (exception.getStatus().equals(AuthenticationErrorStatus.LOCKED)) {
-                    additional.put("locked time", new Date());
-                    additional.put("unlocked time", new Date());
-                }
+                User user = userRepository.findByUsername(exception.getUsername()).orElse(User.builder()
+                        .username(exception.getUsername())
+                        .password(exception.getPassword())
+                        .mail(null)
+                        .accountNonExpired(false)
+                        .credentialsNonExpired(false)
+                        .accountNonLocked(false)
+                        .build());
 
                 if (exception.getStatus().equals(AuthenticationErrorStatus.EXPIRED)) {
                     additional.put("credentials expired", user.isCredentialsNonExpired());
