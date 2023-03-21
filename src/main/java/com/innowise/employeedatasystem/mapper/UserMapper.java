@@ -28,7 +28,6 @@ public class UserMapper {
     public UserDto toUserDto(User user) {
         return UserDto.builder()
                 .username(user.getUsername())
-                .password(user.getPassword())
                 .mail(user.getMail())
                 .roles(roleSetMapper.toRoleDtoSet(user.getRoles()))
                 .enabled(user.isEnabled())
