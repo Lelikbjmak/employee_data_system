@@ -13,10 +13,7 @@ import java.util.Set;
 @AllArgsConstructor
 public class UserDto {
 
-
     private String username;
-
-    private String password;
 
     private String mail;
 

@@ -13,6 +13,8 @@ import java.util.Date;
 @AllArgsConstructor
 public class UpdatedEmployeeDto {
 
+    private long id;
+
     private String firstName;
 
     private String middleName;

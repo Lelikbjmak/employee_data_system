@@ -43,6 +43,7 @@ public class EmployeeMapper {
 
     public DeletedEmployeeDto toDeletedEmployeeDto(Employee employeeEntity) {
         return DeletedEmployeeDto.builder()
+                .id(employeeEntity.getId() != null ? employeeEntity.getId() : null)
                 .firstName(employeeEntity.getFirstName())
                 .lastName(employeeEntity.getLastName())
                 .middleName(employeeEntity.getMiddleName())
@@ -72,6 +73,7 @@ public class EmployeeMapper {
 
     public UpdatedEmployeeDto toUpdatedEmployeeDto(Employee employee) {
         return UpdatedEmployeeDto.builder()
+                .id(employee.getId() != null ? employee.getId() : null)
                 .firstName(employee.getFirstName())
                 .lastName(employee.getLastName())
                 .middleName(employee.getMiddleName())
