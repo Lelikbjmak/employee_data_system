@@ -6,15 +6,25 @@ import java.util.List;
 
 public interface EmployeeManagementService {
 
-    RegistrationResponseDto registerEmployees(List<RegistrationDto> registrationRequestDto);
+    RegistrationResponseDto registerEmployeeList(List<RegistrationDto> registrationRequestDto);
+
+    RegistrationResponseDto registerEmployee(RegistrationDto registrationDto);
 
     List<EmployeeDto> getAllEmployees();
 
-    List<UpdatedEmployeeDto> editEmployees(List<EmployeeDto> editEmployeeDtoList);
+    List<UpdatedEmployeeDto> editEmployeeList(List<EmployeeDto> editEmployeeDtoList);
 
-    List<DeletedEmployeeDto> deleteEmployees(List<EmployeeDto> deleteEmployeeDtoList);
+    UpdatedEmployeeDto editEmployee(Long employeeToEditId, EmployeeDto editedEmployeeDto);
+
+    List<DeletedEmployeeDto> deleteEmployeeList(List<Long> deleteEmployeeIdList);
+
+    DeletedEmployeeDto deleteEmployee(Long employeeId);
+
+    List<EmployeeDto> getEmployeeListByUserUsernameList(List<String> usernameList);
 
     EmployeeDto getEmployeeByUserUsername(String username);
+
+    List<EmployeeDto> getEmployeeListByIdList(List<Long> idList);
 
     EmployeeDto getEmployeeById(Long id);
 }

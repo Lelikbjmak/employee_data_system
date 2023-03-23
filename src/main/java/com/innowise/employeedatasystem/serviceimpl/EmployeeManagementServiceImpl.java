@@ -30,19 +30,29 @@ public class EmployeeManagementServiceImpl implements EmployeeManagementService 
     private final UserMapper userMapper;
 
     @Override
-    public RegistrationResponseDto registerEmployees(List<RegistrationDto> registrationRequestDto) {
+    public RegistrationResponseDto registerEmployeeList(List<RegistrationDto> registrationRequestDto) {
 
         List<EmployeeDto> registrationDtoList = registrationRequestDto.stream()
                 .map(this::registerNewUserEmployee).toList();
 
-        HttpStatus status = HttpStatus.CREATED;
+        return generateRegistrationResponse(registrationDtoList);
+    }
 
+    @Override
+    public RegistrationResponseDto registerEmployee(RegistrationDto registrationDto) {
+
+        EmployeeDto registeredEmployee = registerNewUserEmployee(registrationDto);
+
+        return generateRegistrationResponse(List.of(registeredEmployee));
+    }
+
+    private RegistrationResponseDto generateRegistrationResponse(List<EmployeeDto> registeredEmployeeList) {
         return RegistrationResponseDto.builder()
                 .timestamp(new Date())
-                .code(status.value())
-                .status(status.name())
+                .code(HttpStatus.CREATED.value())
+                .status(HttpStatus.CREATED.name())
                 .message(GeneralConstant.Message.EMPLOYEE_SUCCESSFULLY_ADDED_MESSAGE)
-                .content(registrationDtoList)
+                .content(registeredEmployeeList)
                 .build();
     }
 
@@ -53,49 +63,73 @@ public class EmployeeManagementServiceImpl implements EmployeeManagementService 
     }
 
     @Override
-    public List<UpdatedEmployeeDto> editEmployees(List<EmployeeDto> editEmployeeDtoList) {
-        List<Employee> updatedEmployees = editEmployeeDtoList.stream()
-                .map(this::updateEmployeeAccordingToEmployeeDto).toList();
+    public List<UpdatedEmployeeDto> editEmployeeList(List<EmployeeDto> editEmployeeDtoList) {
 
-        updatedEmployees = employeeService.editEmployees(updatedEmployees);
-
-        return updatedEmployees.stream()
+        List<Employee> editedEmployeeList = editEmployeeDtoList.stream()
+                .map(employeeDto -> {
+                    Employee employeeToEdit = employeeService.getEmployeeById(employeeDto.getId());
+                    return updateEmployeeAccordingToEmployeeDto(employeeToEdit, employeeDto);
+                }).toList();
+        employeeService.saveEmployeeList(editedEmployeeList);
+        return editedEmployeeList.stream()
                 .map(employeeMapper::toUpdatedEmployeeDto)
                 .toList();
     }
 
-    private Employee updateEmployeeAccordingToEmployeeDto(EmployeeDto employeeDto) {
-        Employee employee = employeeMapper.toEmployeeEntityFromDatabase(employeeDto);
+    @Override
+    public UpdatedEmployeeDto editEmployee(Long employeeToEditId, EmployeeDto editedEmployeeDto) {
+        Employee employeeToEdit = employeeService.getEmployeeById(employeeToEditId);
+        updateEmployeeAccordingToEmployeeDto(employeeToEdit, editedEmployeeDto);
+        Employee savedEmployee = employeeService.saveEmployee(employeeToEdit);
+        return employeeMapper.toUpdatedEmployeeDto(savedEmployee);
+    }
 
-        if (employeeDto.getHireDate() != null)
-            employee.setHireDate(employeeDto.getHireDate());
+    private Employee updateEmployeeAccordingToEmployeeDto(Employee employeeToEdit, EmployeeDto editedEmployeeDto) {
 
-        if (employeeDto.getFirstName() != null)
-            employee.setFirstName(employeeDto.getFirstName());
+        if (editedEmployeeDto.getHireDate() != null)
+            employeeToEdit.setHireDate(editedEmployeeDto.getHireDate());
 
-        if (employeeDto.getLastName() != null)
-            employee.setLastName(employeeDto.getLastName());
+        if (editedEmployeeDto.getFirstName() != null)
+            employeeToEdit.setFirstName(editedEmployeeDto.getFirstName());
 
-        if (employeeDto.getMiddleName() != null)
-            employee.setMiddleName(employeeDto.getMiddleName());
+        if (editedEmployeeDto.getLastName() != null)
+            employeeToEdit.setLastName(editedEmployeeDto.getLastName());
 
-        return employee;
+        if (editedEmployeeDto.getMiddleName() != null)
+            employeeToEdit.setMiddleName(editedEmployeeDto.getMiddleName());
+
+        return employeeToEdit;
     }
 
     @Override
-    public List<DeletedEmployeeDto> deleteEmployees(List<EmployeeDto> deleteEmployeeDtoList) {
-
-        List<Employee> deleteEmployeeList = deleteEmployeeDtoList.stream()
-                .map(employeeMapper::toEmployeeEntityFromDatabase).toList();
-
-        employeeService.deleteEmployees(deleteEmployeeList);
-
+    public List<DeletedEmployeeDto> deleteEmployeeList(List<Long> deleteEmployeeIdList) {
+        List<Employee> deleteEmployeeList = employeeService.getEmployeeListByIdList(deleteEmployeeIdList);
+        employeeService.deleteEmployeeList(deleteEmployeeList);
         return deleteEmployeeList.stream().map(employeeMapper::toDeletedEmployeeDto).toList();
+    }
+
+    @Override
+    public DeletedEmployeeDto deleteEmployee(Long id) {
+        Employee deletedEmployee = employeeService.getEmployeeById(id);
+        employeeService.deleteEmployee(deletedEmployee);
+        return employeeMapper.toDeletedEmployeeDto(deletedEmployee);
+    }
+
+    @Override
+    public List<EmployeeDto> getEmployeeListByUserUsernameList(List<String> usernameList) {
+        return employeeService.findEmployeeListByUserUsernameList(usernameList).stream()
+                .map(employeeMapper::toEmployeeDto).toList();
     }
 
     @Override
     public EmployeeDto getEmployeeByUserUsername(String username) {
         return employeeMapper.toEmployeeDto(employeeService.findEmployeeByUserUsername(username));
+    }
+
+    @Override
+    public List<EmployeeDto> getEmployeeListByIdList(List<Long> idList) {
+        return employeeService.getEmployeeListByIdList(idList).stream()
+                .map(employeeMapper::toEmployeeDto).toList();
     }
 
     @Override
@@ -112,10 +146,9 @@ public class EmployeeManagementServiceImpl implements EmployeeManagementService 
         employee.setUser(user);
 
         userService.registerUser(user);
-        Employee registeredEmployee = employeeService.save(employee);
+        Employee registeredEmployee = employeeService.saveEmployee(employee);
 
         return employeeMapper.toEmployeeDto(registeredEmployee);
     }
-
 
 }
