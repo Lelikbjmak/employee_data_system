@@ -27,7 +27,12 @@ public class EmployeeServiceImpl implements EmployeeService {
     }
 
     @Override
-    public Employee save(Employee employee) {
+    public List<Employee> findEmployeeListByUserUsernameList(List<String> usernameList) {
+        return employeeRepository.findAllByUser_usernameIn(usernameList);
+    }
+
+    @Override
+    public Employee saveEmployee(Employee employee) {
         return employeeRepository.save(employee);
     }
 
@@ -37,8 +42,13 @@ public class EmployeeServiceImpl implements EmployeeService {
     }
 
     @Override
-    public void deleteEmployees(List<Employee> deleteEmployeeList) throws EmployeeIsNotFoundException {
+    public void deleteEmployeeList(List<Employee> deleteEmployeeList) {
         employeeRepository.deleteAll(deleteEmployeeList);
+    }
+
+    @Override
+    public void deleteEmployee(Employee employee) {
+        employeeRepository.delete(employee);
     }
 
     @Override
@@ -46,10 +56,16 @@ public class EmployeeServiceImpl implements EmployeeService {
         return employeeRepository.findById(id).orElseThrow(() ->
                 new EmployeeIsNotFoundException(GeneralConstant.Message.EMPLOYEE_IS_NOT_FOUND_BY_ID_EXCEPTION_MESSAGE,
                         Instant.now(), Map.of(GeneralConstant.Field.ID_FIELD, id)));
+
     }
 
     @Override
-    public List<Employee> editEmployees(List<Employee> editEmployeeList) {
+    public List<Employee> getEmployeeListByIdList(List<Long> employeeIdList) {
+        return employeeRepository.findAllById(employeeIdList);
+    }
+
+    @Override
+    public List<Employee> saveEmployeeList(List<Employee> editEmployeeList) {
         return employeeRepository.saveAll(editEmployeeList);
     }
 

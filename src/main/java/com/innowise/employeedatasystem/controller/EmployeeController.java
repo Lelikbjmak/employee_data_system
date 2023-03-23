@@ -1,7 +1,6 @@
 package com.innowise.employeedatasystem.controller;
 
 import com.innowise.employeedatasystem.dto.*;
-import com.innowise.employeedatasystem.exception.EmployeeIsNotFoundException;
 import com.innowise.employeedatasystem.serviceimpl.EmployeeManagementServiceImpl;
 import com.innowise.employeedatasystem.util.ApiConstant;
 import com.innowise.employeedatasystem.util.GeneralConstant;
@@ -19,25 +18,47 @@ public class EmployeeController {
 
     private final EmployeeManagementServiceImpl employeeManagementService;
 
+    @PostMapping(value = ApiConstant.ApiPath.ADD_ALL_X)
+    @PreAuthorize(ApiConstant.Security.HAS_ROLE_ADMIN)
+    @ResponseStatus(HttpStatus.CREATED)
+    public RegistrationResponseDto addEmployeeList(@RequestBody List<RegistrationDto> registrationDtoList) {
+        return employeeManagementService.registerEmployeeList(registrationDtoList);
+    }
+
     @PostMapping(value = ApiConstant.ApiPath.ADD_X)
     @PreAuthorize(ApiConstant.Security.HAS_ROLE_ADMIN)
     @ResponseStatus(HttpStatus.CREATED)
-    public RegistrationResponseDto addEmployee(@RequestBody List<RegistrationDto> registrationDto) {
-        return employeeManagementService.registerEmployees(registrationDto);
+    public RegistrationResponseDto addEmployee(@RequestBody RegistrationDto registrationDto) {
+        return employeeManagementService.registerEmployee(registrationDto);
     }
 
-    @PostMapping(value = ApiConstant.ApiPath.EDIT_X)
+    @PutMapping(value = ApiConstant.ApiPath.EDIT_ALL_X)
     @PreAuthorize(ApiConstant.Security.HAS_ROLE_ADMIN)
     @ResponseStatus(HttpStatus.ACCEPTED)
-    public List<UpdatedEmployeeDto> editEmployee(@RequestBody List<EmployeeDto> editEmployeeDtoList) {
-        return employeeManagementService.editEmployees(editEmployeeDtoList);
+    public List<UpdatedEmployeeDto> editEmployeeList(@RequestBody List<EmployeeDto> editEmployeeDtoList) {
+        return employeeManagementService.editEmployeeList(editEmployeeDtoList);
     }
 
-    @PostMapping(value = ApiConstant.ApiPath.DELETE_X)
+    @PutMapping(value = ApiConstant.ApiPath.EDIT_X)
     @PreAuthorize(ApiConstant.Security.HAS_ROLE_ADMIN)
     @ResponseStatus(HttpStatus.ACCEPTED)
-    public List<DeletedEmployeeDto> deleteEmployees(@RequestBody List<EmployeeDto> deleteEmployeeDtoList) {
-        return employeeManagementService.deleteEmployees(deleteEmployeeDtoList);
+    public UpdatedEmployeeDto editEmployee(@PathVariable(name = GeneralConstant.Field.ID_FIELD) Long id,
+                                           @RequestBody EmployeeDto editEmployeeDto) {
+        return employeeManagementService.editEmployee(id, editEmployeeDto);
+    }
+
+    @DeleteMapping(value = ApiConstant.ApiPath.DELETE_ALL_X)
+    @PreAuthorize(ApiConstant.Security.HAS_ROLE_ADMIN)
+    @ResponseStatus(HttpStatus.ACCEPTED)
+    public List<DeletedEmployeeDto> deleteEmployeeList(@RequestBody List<Long> deleteEmployeeIdList) {
+        return employeeManagementService.deleteEmployeeList(deleteEmployeeIdList);
+    }
+
+    @DeleteMapping(value = ApiConstant.ApiPath.DELETE_X)
+    @PreAuthorize(ApiConstant.Security.HAS_ROLE_ADMIN)
+    @ResponseStatus(HttpStatus.ACCEPTED)
+    public DeletedEmployeeDto deleteEmployee(@PathVariable(name = GeneralConstant.Field.ID_FIELD) Long id) {
+        return employeeManagementService.deleteEmployee(id);
     }
 
     @GetMapping(value = ApiConstant.ApiPath.ALL_X)
@@ -48,11 +69,11 @@ public class EmployeeController {
 
     @GetMapping(value = ApiConstant.ApiPath.GET_X_BY_ID)
     @ResponseStatus(HttpStatus.OK)
-    public EmployeeDto getEmployeeById(@PathVariable(name = GeneralConstant.Field.ID_FIELD) Long id) throws EmployeeIsNotFoundException {
+    public EmployeeDto getEmployeeById(@PathVariable(name = GeneralConstant.Field.ID_FIELD) Long id) {
         return employeeManagementService.getEmployeeById(id);
     }
 
-    @GetMapping(value = ApiConstant.ApiPath.GET_X)
+    @GetMapping(value = ApiConstant.ApiPath.GET_X_BY_USERNAME)
     @ResponseStatus(HttpStatus.OK)
     public EmployeeDto getEmployeeByUserUsername(@RequestParam(name = GeneralConstant.Field.USERNAME_FIELD) String username) {
         return employeeManagementService.getEmployeeByUserUsername(username);

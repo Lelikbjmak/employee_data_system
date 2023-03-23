@@ -17,12 +17,14 @@ public class ApiConstant {
     public static final class ApiPath {
 
         public static final String ADD_X = "add";
+        public static final String ADD_ALL_X = "add/all";
         public static final String ALL_X = "all";
-        public static final String DELETE_X = "delete";
-        public static final String EDIT_X = "edit";
-        public static final String GET_X = "get";
+        public static final String DELETE_ALL_X = "delete/all";
+        public static final String DELETE_X = "delete/{id}";
+        public static final String EDIT_X = "edit/{id}";
+        public static final String EDIT_ALL_X = "edit/all";
+        public static final String GET_X_BY_USERNAME = "get";
         public static final String GET_X_BY_ID = "get/{id}";
-
         public static final String SIGN_IN = "signIn";
     }
 
