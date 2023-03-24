@@ -2,6 +2,7 @@ package com.innowise.employeedatasystem.service;
 
 import com.innowise.employeedatasystem.entity.User;
 import com.innowise.employeedatasystem.repo.UserRepository;
+import com.innowise.employeedatasystem.security.ApplicationUserDetails;
 import com.innowise.employeedatasystem.serviceimpl.UserDetailsServiceImpl;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -49,7 +50,7 @@ class UserDetailsServiceTest {
 
         Mockito.verify(userRepository, Mockito.times(1)).findByUsername(username);
         Assertions.assertNotNull(foundUser);
-        Assertions.assertEquals(user, foundUser);
+        Assertions.assertEquals(new ApplicationUserDetails(user).getUsername(), foundUser.getUsername());
     }
 
     @Test
