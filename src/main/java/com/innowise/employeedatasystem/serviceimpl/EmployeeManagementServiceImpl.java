@@ -6,9 +6,11 @@ import com.innowise.employeedatasystem.entity.User;
 import com.innowise.employeedatasystem.mapper.EmployeeMapper;
 import com.innowise.employeedatasystem.mapper.UserMapper;
 import com.innowise.employeedatasystem.service.EmployeeManagementService;
+import com.innowise.employeedatasystem.util.ApiConstant;
 import com.innowise.employeedatasystem.util.GeneralConstant;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
@@ -30,6 +32,7 @@ public class EmployeeManagementServiceImpl implements EmployeeManagementService 
     private final UserMapper userMapper;
 
     @Override
+    @PreAuthorize(ApiConstant.Security.HAS_ROLE_ADMIN)
     public RegistrationResponseDto registerEmployeeList(List<RegistrationDto> registrationRequestDto) {
 
         List<EmployeeDto> registrationDtoList = registrationRequestDto.stream()
@@ -39,6 +42,7 @@ public class EmployeeManagementServiceImpl implements EmployeeManagementService 
     }
 
     @Override
+    @PreAuthorize(ApiConstant.Security.HAS_ROLE_ADMIN)
     public RegistrationResponseDto registerEmployee(RegistrationDto registrationDto) {
 
         EmployeeDto registeredEmployee = registerNewUserEmployee(registrationDto);
@@ -63,6 +67,7 @@ public class EmployeeManagementServiceImpl implements EmployeeManagementService 
     }
 
     @Override
+    @PreAuthorize(ApiConstant.Security.HAS_ROLE_ADMIN)
     public List<UpdatedEmployeeDto> editEmployeeList(List<EmployeeDto> editEmployeeDtoList) {
 
         List<Employee> editedEmployeeList = editEmployeeDtoList.stream()
@@ -77,6 +82,7 @@ public class EmployeeManagementServiceImpl implements EmployeeManagementService 
     }
 
     @Override
+    @PreAuthorize(ApiConstant.Security.HAS_ROLE_ADMIN)
     public UpdatedEmployeeDto editEmployee(Long employeeToEditId, EmployeeDto editedEmployeeDto) {
         Employee employeeToEdit = employeeService.getEmployeeById(employeeToEditId);
         updateEmployeeAccordingToEmployeeDto(employeeToEdit, editedEmployeeDto);
@@ -102,6 +108,7 @@ public class EmployeeManagementServiceImpl implements EmployeeManagementService 
     }
 
     @Override
+    @PreAuthorize(ApiConstant.Security.HAS_ROLE_ADMIN)
     public List<DeletedEmployeeDto> deleteEmployeeList(List<Long> deleteEmployeeIdList) {
         List<Employee> deleteEmployeeList = employeeService.getEmployeeListByIdList(deleteEmployeeIdList);
         employeeService.deleteEmployeeList(deleteEmployeeList);
@@ -109,6 +116,7 @@ public class EmployeeManagementServiceImpl implements EmployeeManagementService 
     }
 
     @Override
+    @PreAuthorize(ApiConstant.Security.HAS_ROLE_ADMIN)
     public DeletedEmployeeDto deleteEmployee(Long id) {
         Employee deletedEmployee = employeeService.getEmployeeById(id);
         employeeService.deleteEmployee(deletedEmployee);
