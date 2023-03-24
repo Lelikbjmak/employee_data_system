@@ -45,7 +45,7 @@ class EmployeeServiceTest {
 
         Mockito.when(employeeRepository.save(employee)).thenReturn(employee);
 
-        Employee savedEmployee = employeeService.save(employee);
+        Employee savedEmployee = employeeService.saveEmployee(employee);
 
         Mockito.verify(employeeRepository, Mockito.times(1)).save(employee);
         Assertions.assertEquals(employee, savedEmployee);
@@ -85,12 +85,34 @@ class EmployeeServiceTest {
         Assertions.assertNotNull(savedEmployees);
 
         // Call deleteEmployees() to delete Employees
-        employeeService.deleteEmployees(savedEmployees);
+        employeeService.deleteEmployeeList(savedEmployees);
 
         List<Employee> allEmployeesAfterDelete = employeeService.getAllEmployees();
         Assertions.assertTrue(allEmployeesAfterDelete.isEmpty());
 
         Mockito.verify(employeeRepository, Mockito.times(1)).saveAll(employees);
+        Mockito.verify(employeeRepository, Mockito.times(1)).findAll();
+    }
+
+    @Test
+    @Order(4)
+    @DisplayName(value = "`Delete` Employee")
+    void mustDeleteEmployeeTest() {
+
+        Employee employee = Employee.builder().firstName("First").build();
+
+        Mockito.when(employeeRepository.save(employee)).thenReturn(employee);
+
+        Employee savedEmployee = employeeService.saveEmployee(employee);
+        Assertions.assertNotNull(savedEmployee);
+
+        // Call deleteEmployees() to delete Employees
+        employeeService.deleteEmployee(savedEmployee);
+
+        List<Employee> allEmployeesAfterDelete = employeeService.getAllEmployees();
+        Assertions.assertTrue(allEmployeesAfterDelete.isEmpty());
+
+        Mockito.verify(employeeRepository, Mockito.times(1)).save(employee);
         Mockito.verify(employeeRepository, Mockito.times(1)).findAll();
     }
 
@@ -114,6 +136,21 @@ class EmployeeServiceTest {
 
     @Test
     @Order(6)
+    @DisplayName(value = "`Find` Employee List by id List")
+    void mustReturnEmployeeListByIdList() {
+
+        List<Long> idList = List.of(1L, 2L);
+        List<Employee> employeeList = List.of(new Employee(), new Employee());
+
+        Mockito.when(employeeRepository.findAllById(idList)).thenReturn(employeeList);
+        List<Employee> foundEmployeeList = employeeService.getEmployeeListByIdList(idList);
+
+        Mockito.verify(employeeRepository, Mockito.times(1)).findAllById(idList);
+        Assertions.assertEquals(employeeList, foundEmployeeList);
+    }
+
+    @Test
+    @Order(7)
     @DisplayName(value = "`Find` Employee by id. Throw EmployeeIsNotFoundException")
     void mustTrowExceptionInFindEmployeeByIdTest() {
 
@@ -125,7 +162,7 @@ class EmployeeServiceTest {
     }
 
     @Test
-    @Order(7)
+    @Order(8)
     @DisplayName(value = "`Find` Employee by username")
     void mustReturnEmployeeByUserUsernameTest() {
 
@@ -144,7 +181,7 @@ class EmployeeServiceTest {
     }
 
     @Test
-    @Order(8)
+    @Order(9)
     @DisplayName(value = "`Find` Employee by User username. Throw EmployeeIsNotFoundException")
     void mustTrowExceptionInEmployeeByUserUsernameTest() {
 
@@ -152,5 +189,11 @@ class EmployeeServiceTest {
         Mockito.when(employeeRepository.findByUser_username(username)).thenReturn(Optional.empty());
 
         Assertions.assertThrows(EmployeeIsNotFoundException.class, () -> employeeService.findEmployeeByUserUsername(username));
+    }
+
+    @Test
+    @Order(10)
+    void mustReturnAllUsersAfterSave() {
+
     }
 }

@@ -133,4 +133,13 @@ class EmployeeRepositoryTest {
         Assertions.assertNotNull(employeeRepository.findByFirstNameAndLastNameAndMiddleNameAndHireDate(firstName,
                 lastName, middleName, new Date()));
     }
+
+    @Test
+    @Order(10)
+    @DisplayName(value = "Success `FIND` Employees By User.username in (...)")
+    @Sql(value = "/sql/create-employee.sql", executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
+    @Sql(value = "/sql/truncate-tables.sql", executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
+    void mustFindEmployeeListByUsernameList(@Value(value = "${user.username}") String username) {
+
+    }
 }
