@@ -128,8 +128,7 @@ class JwtServiceTest {
         String token = jwtServiceImpl.generateToken(userDetails);
 
         try {
-            boolean isValid = jwtServiceImpl.isJwtTokenValid(token, new ApplicationUserDetails(User.builder()
-                    .username("wrongUsername").build())); // incorrect username
+            boolean isValid = jwtServiceImpl.isJwtTokenValid(token, new ApplicationUserDetails(new User())); // incorrect username
             Assertions.assertFalse(isValid);
         } catch (InvalidTokenException e) {
             System.err.println(e.getMessage());
