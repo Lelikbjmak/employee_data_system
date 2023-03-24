@@ -1,0 +1,36 @@
+# ----- Properties -----
+spring:
+  datasource:
+    url: jdbc:h2:mem:testdb;DB_CLOSE_ON_EXIT=FALSE
+    driverClassName: org.h2.Driver
+    username: sa
+    password: password
+    initialization-mode: always
+  jpa:
+    database-platform: org.hibernate.dialect.H2Dialect
+    hibernate:
+      ddl-auto: create-drop
+    show-sql: true
+  h2:
+    console:
+      enabled: true
+
+user:
+  username: test
+  password: 1111
+  mail: test@gmail.com
+  role-admin: ROLE_ADMIN
+  role-user: ROLE_USER
+
+
+employee:
+  id: 1
+  first-name: New
+  last-name: New
+  middle-name: New
+
+existing-employee:
+  id: 1
+  first-name: Test1
+  last-name: Tester1
+  middle-name: Testerov1
