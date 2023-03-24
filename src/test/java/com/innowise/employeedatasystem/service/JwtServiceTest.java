@@ -2,6 +2,7 @@ package com.innowise.employeedatasystem.service;
 
 import com.innowise.employeedatasystem.entity.User;
 import com.innowise.employeedatasystem.exception.InvalidTokenException;
+import com.innowise.employeedatasystem.security.ApplicationUserDetails;
 import com.innowise.employeedatasystem.serviceimpl.JwtServiceImpl;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
@@ -16,6 +17,7 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.MockitoSession;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.test.context.event.annotation.AfterTestMethod;
 import org.springframework.test.context.event.annotation.BeforeTestMethod;
 
@@ -61,7 +63,7 @@ class JwtServiceTest {
     void generateToken() {
         User user = User.builder().username("user").build();
 
-        String token = jwtServiceImpl.generateToken(user);
+        String token = jwtServiceImpl.generateToken(new ApplicationUserDetails(user));
         Assertions.assertNotNull(token);
     }
 
@@ -71,7 +73,7 @@ class JwtServiceTest {
 
         User user = User.builder().username("user").build();
 
-        String token = jwtServiceImpl.generateToken(user);
+        String token = jwtServiceImpl.generateToken(new ApplicationUserDetails(user));
 
         try {
             String username = jwtServiceImpl.extractUsername(token);
@@ -85,7 +87,7 @@ class JwtServiceTest {
     @DisplayName(value = "Extract expire date")
     void extractExpireDateTest() {
 
-        String token = jwtServiceImpl.generateToken(new User());
+        String token = jwtServiceImpl.generateToken(new ApplicationUserDetails(new User()));
 
         try {
             Date expireDate = jwtServiceImpl.extractExpiration(token);
@@ -105,11 +107,11 @@ class JwtServiceTest {
     void validateTokenSuccessTest() {
 
         User user = User.builder().username("user").build();
-
-        String token = jwtServiceImpl.generateToken(user);
+        UserDetails userDetails = new ApplicationUserDetails(user);
+        String token = jwtServiceImpl.generateToken(userDetails);
 
         try {
-            boolean isValid = jwtServiceImpl.isJwtTokenValid(token, user);
+            boolean isValid = jwtServiceImpl.isJwtTokenValid(token, userDetails);
             Assertions.assertTrue(isValid);
         } catch (InvalidTokenException e) {
             throw new RuntimeException(e);
@@ -121,11 +123,13 @@ class JwtServiceTest {
     void validateTokenFailedUsernameTest() {
 
         User user = User.builder().username("user").build();
+        UserDetails userDetails = new ApplicationUserDetails(user);
 
-        String token = jwtServiceImpl.generateToken(user);
+        String token = jwtServiceImpl.generateToken(userDetails);
 
         try {
-            boolean isValid = jwtServiceImpl.isJwtTokenValid(token, new User()); // incorrect username
+            boolean isValid = jwtServiceImpl.isJwtTokenValid(token, new ApplicationUserDetails(User.builder()
+                    .username("wrongUsername").build())); // incorrect username
             Assertions.assertFalse(isValid);
         } catch (InvalidTokenException e) {
             System.err.println(e.getMessage());
@@ -138,11 +142,12 @@ class JwtServiceTest {
     void validateTokenFailedExpirationTest() {
 
         User user = User.builder().username("user").build();
+        UserDetails userDetails = new ApplicationUserDetails(user);
 
         String token = getExpiredToken.get();
 
         Exception exception = Assertions.assertThrows(InvalidTokenException.class,
-                () -> jwtServiceImpl.isJwtTokenValid(token, user)); // token expired
+                () -> jwtServiceImpl.isJwtTokenValid(token, userDetails)); // token expired
 
         org.assertj.core.api.Assertions.assertThat(exception.getMessage()).contains("JWT expired at");
     }
@@ -152,9 +157,10 @@ class JwtServiceTest {
     void validateTokenIsNullTest() {
 
         User user = User.builder().username("user").build();
+        UserDetails userDetails = new ApplicationUserDetails(user);
 
         Exception exception = Assertions.assertThrows(InvalidTokenException.class,
-                () -> jwtServiceImpl.isJwtTokenValid(null, user));
+                () -> jwtServiceImpl.isJwtTokenValid(null, userDetails));
 
         org.assertj.core.api.Assertions.assertThat(exception.getMessage()).contains("JWT String argument");
     }
@@ -164,11 +170,12 @@ class JwtServiceTest {
     void validateTokenIsMalformedTest() {
 
         User user = User.builder().username("user").build();
+        UserDetails userDetails = new ApplicationUserDetails(user);
 
-        String token = jwtServiceImpl.generateToken(user);
+        String token = jwtServiceImpl.generateToken(userDetails);
 
         Exception exception = Assertions.assertThrows(InvalidTokenException.class,
-                () -> jwtServiceImpl.isJwtTokenValid(token.substring(2), user));
+                () -> jwtServiceImpl.isJwtTokenValid(token.substring(2), userDetails));
 
         org.assertj.core.api.Assertions.assertThat(exception.getMessage()).contains("Malformed");
     }
@@ -178,11 +185,12 @@ class JwtServiceTest {
     void validateTokenSignatureErrorTest() {
 
         User user = User.builder().username("user").build();
+        UserDetails userDetails = new ApplicationUserDetails(user);
 
-        String token = jwtServiceImpl.generateToken(user);
+        String token = jwtServiceImpl.generateToken(userDetails);
 
         Exception exception = Assertions.assertThrows(InvalidTokenException.class,
-                () -> jwtServiceImpl.isJwtTokenValid(token.substring(0, token.length() - 2), user));
+                () -> jwtServiceImpl.isJwtTokenValid(token.substring(0, token.length() - 2), userDetails));
 
         org.assertj.core.api.Assertions.assertThat(exception.getMessage()).contains("JWT signature");
     }
@@ -192,9 +200,10 @@ class JwtServiceTest {
     void validateTokenSTest() {
 
         User user = User.builder().username("user").build();
+        UserDetails userDetails = new ApplicationUserDetails(user);
 
         Exception exception = Assertions.assertThrows(InvalidTokenException.class,
-                () -> jwtServiceImpl.isJwtTokenValid(JWT_TOKEN_SECRET_KEY, user));
+                () -> jwtServiceImpl.isJwtTokenValid(JWT_TOKEN_SECRET_KEY, userDetails));
 
         org.assertj.core.api.Assertions.assertThat(exception.getMessage()).contains("JWT strings must");
     }
@@ -204,7 +213,9 @@ class JwtServiceTest {
     void isTokenExpired() {
 
         User user = User.builder().username("user").build();
-        String token = jwtServiceImpl.generateToken(user);
+        UserDetails userDetails = new ApplicationUserDetails(user);
+
+        String token = jwtServiceImpl.generateToken(userDetails);
         String expiredToken = getExpiredToken.get();
 
         try {
