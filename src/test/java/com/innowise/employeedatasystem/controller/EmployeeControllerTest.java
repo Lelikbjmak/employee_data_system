@@ -29,8 +29,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Set;
 
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -64,7 +63,7 @@ class EmployeeControllerTest {
     }
 
     @Test
-    @DisplayName(value = "Get Employee by Id.")
+    @DisplayName(value = "`Get` Employee by Id.")
     @WithMockUser(authorities = {"ROLE_USER"})
     void successGetEmployeeById(@Value(value = "${employee.id}") Long id) throws Exception {
 
@@ -80,24 +79,7 @@ class EmployeeControllerTest {
     }
 
     @Test
-    @DisplayName(value = "Get Employee by Id (NOT AUTHENTICATED).")
-    void failedGetEmployeeByIdNotAuthenticated(@Value(value = "${employee.id}") Long id) throws Exception {
-
-        String responseString = mockMvc.perform(get(Constant.ApiRoutes.GET_X + "/" + id)
-                        .accept(MediaType.APPLICATION_JSON_VALUE))
-                .andDo(print())
-                .andExpect(status().isUnauthorized())
-                .andReturn().getResponse().getContentAsString();
-
-        AuthenticationFailedResponseDto failedResponseDto = objectMapper.readValue(responseString, AuthenticationFailedResponseDto.class);
-        Assertions.assertNotNull(failedResponseDto, "Response can't be deserialized to AuthenticationFailedResponseDto.class.");
-        Assertions.assertEquals(HttpStatus.UNAUTHORIZED.value(), failedResponseDto.getCode());
-        Assertions.assertEquals(Constant.ApiRoutes.GET_X + "/" + id, failedResponseDto.getPath());
-        Assertions.assertEquals(Constant.Message.NOT_AUTHENTICATED_MESSAGE, failedResponseDto.getMessage());
-    }
-
-    @Test
-    @DisplayName(value = "Get Employee by Id (EMPLOYEE NOT FOUND).")
+    @DisplayName(value = "`Get` Employee by Id (EMPLOYEE NOT FOUND).")
     @WithMockUser(authorities = {"ROLE_USER"})
     void failedGetEmployeeById() throws Exception {
 
@@ -116,7 +98,7 @@ class EmployeeControllerTest {
     }
 
     @Test
-    @DisplayName(value = "Get all Employees.")
+    @DisplayName(value = "`Get` all Employees.")
     @WithMockUser(authorities = {"ROLE_USER"})
     void successGetAllEmployees() throws Exception {
 
@@ -135,25 +117,7 @@ class EmployeeControllerTest {
     }
 
     @Test
-    @DisplayName(value = "Get all Employees (NOT AUTHENTICATED).")
-    void failedGetAllEmployeesNotAuthenticated() throws Exception {
-
-        String responseString = mockMvc.perform(get(Constant.ApiRoutes.GET_ALL_X)
-                        .accept(MediaType.APPLICATION_JSON_VALUE))
-                .andDo(print())
-                .andExpect(status().isUnauthorized())
-                .andReturn().getResponse().getContentAsString();
-
-        AuthenticationFailedResponseDto failedResponseDto = objectMapper.readValue(responseString, AuthenticationFailedResponseDto.class);
-
-        Assertions.assertNotNull(failedResponseDto, "Response can't be deserialized to AuthenticationFailedResponseDto.class.");
-        Assertions.assertEquals(HttpStatus.UNAUTHORIZED.value(), failedResponseDto.getCode());
-        Assertions.assertEquals(Constant.ApiRoutes.GET_ALL_X, failedResponseDto.getPath());
-        Assertions.assertEquals(Constant.Message.NOT_AUTHENTICATED_MESSAGE, failedResponseDto.getMessage());
-    }
-
-    @Test
-    @DisplayName(value = "Get Employee by username.")
+    @DisplayName(value = "`Get` Employee by username.")
     @WithMockUser(authorities = {"ROLE_USER"})
     void successGetEmployeeByUserUsername(@Value(value = "${user.username}") String username) throws Exception {
 
@@ -170,25 +134,7 @@ class EmployeeControllerTest {
     }
 
     @Test
-    @DisplayName(value = "Get Employee by username (NOT AUTHENTICATED).")
-    void failedGetEmployeeByUserUsernameNotAuthenticated(@Value(value = "${user.username}") String username) throws Exception {
-
-        String responseString = mockMvc.perform(get(Constant.ApiRoutes.GET_X)
-                        .param(GeneralConstant.Field.USERNAME_FIELD, username)
-                        .accept(MediaType.APPLICATION_JSON_VALUE))
-                .andDo(print())
-                .andExpect(status().isUnauthorized())
-                .andReturn().getResponse().getContentAsString();
-
-        AuthenticationFailedResponseDto failedResponseDto = objectMapper.readValue(responseString, AuthenticationFailedResponseDto.class);
-        Assertions.assertNotNull(failedResponseDto, "Response can't be deserialized to AuthenticationFailedResponseDto.class.");
-        Assertions.assertEquals(HttpStatus.UNAUTHORIZED.value(), failedResponseDto.getCode());
-        Assertions.assertEquals(Constant.ApiRoutes.GET_X, failedResponseDto.getPath());
-        Assertions.assertEquals(Constant.Message.NOT_AUTHENTICATED_MESSAGE, failedResponseDto.getMessage());
-    }
-
-    @Test
-    @DisplayName(value = "Get Employee by username (EMPLOYEE NOT FOUND).")
+    @DisplayName(value = "`Get` Employee by username (EMPLOYEE NOT FOUND).")
     @WithMockUser(authorities = {"ROLE_USER"})
     void failedGetEmployeeByUserUsernameEmployeeNotFound() throws Exception {
 
@@ -208,25 +154,20 @@ class EmployeeControllerTest {
     }
 
     @Test
-    @DisplayName(value = "Delete Employee.")
+    @DisplayName(value = "`Delete` Employee.")
     @WithMockUser(authorities = {"ROLE_ADMIN"})
     void successDeleteEmployee(@Value(value = "${employee.id}") Long id) throws Exception {
 
-        EmployeeDto employeeDto = EmployeeDto.builder()
-                .id(id)
-                .build();
-
         Assertions.assertNotNull(employeeService.getEmployeeById(id));
 
-        String responseString = mockMvc.perform(post(Constant.ApiRoutes.DELETE_X)
+        String responseString = mockMvc.perform(delete(Constant.ApiRoutes.DELETE_X + "/" + id)
                         .contentType(MediaType.APPLICATION_JSON_VALUE)
-                        .content(objectMapper.writeValueAsString(List.of(employeeDto)))
                         .accept(MediaType.APPLICATION_JSON_VALUE))
                 .andDo(print())
                 .andExpect(status().isAccepted())
                 .andReturn().getResponse().getContentAsString();
 
-        List<DeletedEmployeeDto> deletedEmployeeDto = objectMapper.readValue(responseString, List.class);
+        DeletedEmployeeDto deletedEmployeeDto = objectMapper.readValue(responseString, DeletedEmployeeDto.class);
         Assertions.assertNotNull(deletedEmployeeDto, "Response can't be deserialized to DeletedEmployeeDto.class.");
 
         Assertions.assertThrows(EmployeeIsNotFoundException.class, () ->
@@ -234,55 +175,67 @@ class EmployeeControllerTest {
     }
 
     @Test
-    @DisplayName(value = "Delete Employee (ACCESS DENIED).")
-    @WithMockUser(authorities = {"ROLE_USER"})
-    void failedDeleteEmployeeNotCompliantAuthorities(@Value(value = "${employee.id}") Long id) throws Exception {
-
-        EmployeeDto employeeDto = EmployeeDto.builder()
-                .id(id)
-                .build();
-
-        String responseString = mockMvc.perform(post(Constant.ApiRoutes.DELETE_X)
-                        .contentType(MediaType.APPLICATION_JSON_VALUE)
-                        .content(objectMapper.writeValueAsString(List.of(employeeDto)))
-                        .accept(MediaType.APPLICATION_JSON_VALUE))
-                .andDo(print())
-                .andExpect(status().isForbidden())
-                .andReturn().getResponse().getContentAsString();
-
-        ExceptionResponseDto failedResponseDto = objectMapper.readValue(responseString, ExceptionResponseDto.class);
-        Assertions.assertNotNull(failedResponseDto, "Response can't be deserialized to ExceptionResponseDto.class.");
-        Assertions.assertEquals(HttpStatus.FORBIDDEN.value(), failedResponseDto.getCode());
-        Assertions.assertEquals(GeneralConstant.Message.ACCESS_DENIED_EXCEPTION_MESSAGE, failedResponseDto.getMessage());
-    }
-
-    @Test
-    @DisplayName(value = "Delete Employee (NOT AUTHENTICATED).")
-    void failedDeleteEmployeeNotAUTHENTICATED(@Value(value = "${employee.id}") Long id) throws Exception {
-
-        EmployeeDto employeeDto = EmployeeDto.builder()
-                .id(id)
-                .build();
-
-        String responseString = mockMvc.perform(post(Constant.ApiRoutes.DELETE_X)
-                        .contentType(MediaType.APPLICATION_JSON_VALUE)
-                        .content(objectMapper.writeValueAsString(List.of(employeeDto)))
-                        .accept(MediaType.APPLICATION_JSON_VALUE))
-                .andDo(print())
-                .andExpect(status().isUnauthorized())
-                .andReturn().getResponse().getContentAsString();
-
-        AuthenticationFailedResponseDto failedResponseDto = objectMapper.readValue(responseString, AuthenticationFailedResponseDto.class);
-        Assertions.assertNotNull(failedResponseDto, "Response can't be deserialized to AuthenticationFailedResponseDto.class.");
-        Assertions.assertEquals(HttpStatus.UNAUTHORIZED.value(), failedResponseDto.getCode());
-        Assertions.assertEquals(Constant.ApiRoutes.DELETE_X, failedResponseDto.getPath());
-        Assertions.assertEquals(Constant.Message.NOT_AUTHENTICATED_MESSAGE, failedResponseDto.getMessage());
-    }
-
-    @Test
-    @DisplayName(value = "Edit Employee.")
+    @DisplayName(value = "`Delete` Employee list.")
     @WithMockUser(authorities = {"ROLE_ADMIN"})
-    void successEditEmployee(@Value(value = "${employee.id}") Long id) throws Exception {
+    void successDeleteEmployeeList() throws Exception {
+        List<Long> employeeIdToDelete = List.of(1L, 2L, 99L);
+
+        Assertions.assertFalse(employeeService.getEmployeeListByIdList(employeeIdToDelete).isEmpty());
+
+        String responseString = mockMvc.perform(delete(Constant.ApiRoutes.DELETE_ALL_X)
+                        .contentType(MediaType.APPLICATION_JSON_VALUE)
+                        .accept(MediaType.APPLICATION_JSON_VALUE)
+                        .content(objectMapper.writeValueAsString(employeeIdToDelete)))
+                .andDo(print())
+                .andExpect(status().isAccepted())
+                .andReturn().getResponse().getContentAsString();
+
+        List<DeletedEmployeeDto> deletedEmployeeDto = objectMapper.readValue(responseString, List.class);
+        Assertions.assertNotNull(deletedEmployeeDto, "Response can't be deserialized to DeletedEmployeeDto.class.");
+
+        Assertions.assertTrue(employeeService.getEmployeeListByIdList(employeeIdToDelete).isEmpty());
+    }
+
+    @Test
+    @DisplayName(value = "`Edit` Employee.")
+    @WithMockUser(authorities = {"ROLE_ADMIN"})
+    void successEditEmployee() throws Exception {
+
+        final String newLastName = "Updated";
+
+        List<EmployeeDto> employeeDtoListToEdit = List.of(
+                EmployeeDto.builder()
+                        .id(1L)
+                        .lastName(newLastName)
+                        .build(),
+                EmployeeDto.builder()
+                        .id(2L)
+                        .lastName(newLastName)
+                        .build()
+        );
+
+        Assertions.assertNotEquals(newLastName, employeeService.getEmployeeById(1L).getLastName());
+        Assertions.assertNotEquals(newLastName, employeeService.getEmployeeById(2L).getLastName());
+
+        String responseString = mockMvc.perform(put(Constant.ApiRoutes.EDIT_ALL_X)
+                        .contentType(MediaType.APPLICATION_JSON_VALUE)
+                        .content(objectMapper.writeValueAsString(employeeDtoListToEdit))
+                        .accept(MediaType.APPLICATION_JSON_VALUE))
+                .andDo(print())
+                .andExpect(status().isAccepted())
+                .andReturn().getResponse().getContentAsString();
+
+        List<UpdatedEmployeeDto> updatedEmployeeDto = objectMapper.readValue(responseString, List.class);
+        Assertions.assertNotNull(updatedEmployeeDto, "Response can't be deserialized to DeletedEmployeeDto.class.");
+
+        Assertions.assertEquals(newLastName, employeeService.getEmployeeById(1L).getLastName());
+        Assertions.assertEquals(newLastName, employeeService.getEmployeeById(2L).getLastName());
+    }
+
+    @Test
+    @DisplayName(value = "`Edit` Employee List.")
+    @WithMockUser(authorities = {"ROLE_ADMIN"})
+    void successEditEmployeeList(@Value(value = "${employee.id}") Long id) throws Exception {
 
         final String newLastName = "Updated";
 
@@ -293,74 +246,22 @@ class EmployeeControllerTest {
 
         Assertions.assertNotEquals(newLastName, employeeService.getEmployeeById(id).getLastName());
 
-        String responseString = mockMvc.perform(post(Constant.ApiRoutes.EDIT_X)
+        String responseString = mockMvc.perform(put(Constant.ApiRoutes.EDIT_X + "/" + id)
                         .contentType(MediaType.APPLICATION_JSON_VALUE)
-                        .content(objectMapper.writeValueAsString(List.of(employeeDto)))
+                        .content(objectMapper.writeValueAsString(employeeDto))
                         .accept(MediaType.APPLICATION_JSON_VALUE))
                 .andDo(print())
                 .andExpect(status().isAccepted())
                 .andReturn().getResponse().getContentAsString();
 
-        List<UpdatedEmployeeDto> updatedEmployeeDtoList = objectMapper.readValue(responseString, List.class);
-        Assertions.assertNotNull(updatedEmployeeDtoList, "Response can't be deserialized to DeletedEmployeeDto.class.");
+        UpdatedEmployeeDto updatedEmployeeDto = objectMapper.readValue(responseString, UpdatedEmployeeDto.class);
+        Assertions.assertNotNull(updatedEmployeeDto, "Response can't be deserialized to DeletedEmployeeDto.class.");
 
         Assertions.assertEquals(newLastName, employeeService.getEmployeeById(id).getLastName());
     }
 
     @Test
-    @DisplayName(value = "Edit Employee (NOT AUTHENTICATED).")
-    void failedEditEmployeeNotAuthenticated(@Value(value = "${employee.id}") Long id) throws Exception {
-
-        final String newLastName = "Updated";
-
-        EmployeeDto employeeDto = EmployeeDto.builder()
-                .id(id)
-                .lastName(newLastName)
-                .build();
-
-        String responseString = mockMvc.perform(post(Constant.ApiRoutes.EDIT_X)
-                        .contentType(MediaType.APPLICATION_JSON_VALUE)
-                        .content(objectMapper.writeValueAsString(List.of(employeeDto)))
-                        .accept(MediaType.APPLICATION_JSON_VALUE))
-                .andDo(print())
-                .andExpect(status().isUnauthorized())
-                .andReturn().getResponse().getContentAsString();
-
-        AuthenticationFailedResponseDto failedResponseDto = objectMapper.readValue(responseString, AuthenticationFailedResponseDto.class);
-        Assertions.assertNotNull(failedResponseDto, "Response can't be deserialized to AuthenticationFailedResponseDto.class.");
-        Assertions.assertEquals(HttpStatus.UNAUTHORIZED.value(), failedResponseDto.getCode());
-        Assertions.assertEquals(Constant.ApiRoutes.EDIT_X, failedResponseDto.getPath());
-        Assertions.assertEquals(Constant.Message.NOT_AUTHENTICATED_MESSAGE, failedResponseDto.getMessage());
-    }
-
-    @Test
-    @DisplayName(value = "Edit Employee (ACCESS DENIED).")
-    @WithMockUser(authorities = {"ROLE_USER"})
-    void failedEditEmployeeNotCompliantAuthorities(@Value(value = "${employee.id}") Long id) throws Exception {
-
-        final String newLastName = "Updated";
-
-        EmployeeDto employeeDto = EmployeeDto.builder()
-                .id(id)
-                .lastName(newLastName)
-                .build();
-
-        String responseString = mockMvc.perform(post(Constant.ApiRoutes.EDIT_X)
-                        .contentType(MediaType.APPLICATION_JSON_VALUE)
-                        .content(objectMapper.writeValueAsString(List.of(employeeDto)))
-                        .accept(MediaType.APPLICATION_JSON_VALUE))
-                .andDo(print())
-                .andExpect(status().isForbidden())
-                .andReturn().getResponse().getContentAsString();
-
-        ExceptionResponseDto failedResponseDto = objectMapper.readValue(responseString, ExceptionResponseDto.class);
-        Assertions.assertNotNull(failedResponseDto, "Response can't be deserialized to ExceptionResponseDto.class.");
-        Assertions.assertEquals(HttpStatus.FORBIDDEN.value(), failedResponseDto.getCode());
-        Assertions.assertEquals(GeneralConstant.Message.ACCESS_DENIED_EXCEPTION_MESSAGE, failedResponseDto.getMessage());
-    }
-
-    @Test
-    @DisplayName(value = "Add Employee.")
+    @DisplayName(value = "`Add` Employee.")
     @WithMockUser(authorities = {"ROLE_ADMIN"})
     @Sql(value = "/sql/before-registration.sql", executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
     @Sql(value = "/sql/truncate-tables.sql", executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
@@ -385,7 +286,7 @@ class EmployeeControllerTest {
                         .build())
                 .build();
 
-        mockMvc.perform(post(Constant.ApiRoutes.ADD_X)
+        mockMvc.perform(post(Constant.ApiRoutes.ADD_ALL_X)
                         .contentType(MediaType.APPLICATION_JSON_VALUE)
                         .content(objectMapper.writeValueAsString(List.of(registrationDto)))
                         .accept(MediaType.APPLICATION_JSON_VALUE))
@@ -396,60 +297,9 @@ class EmployeeControllerTest {
         Assertions.assertEquals(1, employeeService.getAllEmployees().size());
     }
 
-    @Test
-    @DisplayName(value = "Add Employee (NOT AUTHENTICATED).")
-    void failedAddEmployeeNotAuthenticated() throws Exception {
-
-        RegistrationDto registrationDto = RegistrationDto.builder()
-                .userDto(RegistrationUserDto.builder()
-                        .build())
-                .employeeDto(RegistrationEmployeeDto.builder()
-                        .build())
-                .build();
-
-        String responseString = mockMvc.perform(post(Constant.ApiRoutes.ADD_X)
-                        .contentType(MediaType.APPLICATION_JSON_VALUE)
-                        .content(objectMapper.writeValueAsString(List.of(registrationDto)))
-                        .accept(MediaType.APPLICATION_JSON_VALUE))
-                .andDo(print())
-                .andExpect(status().isUnauthorized())
-                .andReturn().getResponse().getContentAsString();
-
-        AuthenticationFailedResponseDto failedResponseDto = objectMapper.readValue(responseString, AuthenticationFailedResponseDto.class);
-        Assertions.assertNotNull(failedResponseDto, "Response can't be deserialized to AuthenticationFailedResponseDto.class.");
-        Assertions.assertEquals(HttpStatus.UNAUTHORIZED.value(), failedResponseDto.getCode());
-        Assertions.assertEquals(Constant.ApiRoutes.ADD_X, failedResponseDto.getPath());
-        Assertions.assertEquals(Constant.Message.NOT_AUTHENTICATED_MESSAGE, failedResponseDto.getMessage());
-    }
 
     @Test
-    @DisplayName(value = "Add Employee (ACCESS DENIED).")
-    @WithMockUser(authorities = {"ROLE_USER"})
-    void failedAddEmployeeNotCompliantAuthorities() throws Exception {
-
-        RegistrationDto registrationDto = RegistrationDto.builder()
-                .userDto(RegistrationUserDto.builder()
-                        .build())
-                .employeeDto(RegistrationEmployeeDto.builder()
-                        .build())
-                .build();
-
-        String responseString = mockMvc.perform(post(Constant.ApiRoutes.ADD_X)
-                        .contentType(MediaType.APPLICATION_JSON_VALUE)
-                        .content(objectMapper.writeValueAsString(List.of(registrationDto)))
-                        .accept(MediaType.APPLICATION_JSON_VALUE))
-                .andDo(print())
-                .andExpect(status().isForbidden())
-                .andReturn().getResponse().getContentAsString();
-
-        ExceptionResponseDto failedResponseDto = objectMapper.readValue(responseString, ExceptionResponseDto.class);
-        Assertions.assertNotNull(failedResponseDto, "Response can't be deserialized to ExceptionResponseDto.class.");
-        Assertions.assertEquals(HttpStatus.FORBIDDEN.value(), failedResponseDto.getCode());
-        Assertions.assertEquals(GeneralConstant.Message.ACCESS_DENIED_EXCEPTION_MESSAGE, failedResponseDto.getMessage());
-    }
-
-    @Test
-    @DisplayName(value = "Add Employee (ACCESS DENIED).")
+    @DisplayName(value = "`Add` Employee (ROLE IS NOT FOUND).")
     @WithMockUser(authorities = {"ROLE_ADMIN"})
     void failedAddEmployeeInvalidRole() throws Exception {
 
@@ -462,7 +312,7 @@ class EmployeeControllerTest {
                         .build())
                 .build();
 
-        String responseString = mockMvc.perform(post(Constant.ApiRoutes.ADD_X)
+        String responseString = mockMvc.perform(post(Constant.ApiRoutes.ADD_ALL_X)
                         .contentType(MediaType.APPLICATION_JSON_VALUE)
                         .content(objectMapper.writeValueAsString(List.of(registrationDto)))
                         .accept(MediaType.APPLICATION_JSON_VALUE))
