@@ -1,6 +1,8 @@
 package com.innowise.employeedatasystem.serviceimpl;
 
+import com.innowise.employeedatasystem.entity.User;
 import com.innowise.employeedatasystem.repo.UserRepository;
+import com.innowise.employeedatasystem.security.ApplicationUserDetails;
 import com.innowise.employeedatasystem.util.GeneralConstant;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Primary;
@@ -18,9 +20,10 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-
-        return userRepository.findByUsername(username)
+        User user = userRepository.findByUsername(username)
                 .orElseThrow(() -> new UsernameNotFoundException(GeneralConstant.Message.USERNAME_NOT_FOUND_EXCEPTION_MESSAGE));
+
+        return new ApplicationUserDetails(user);
     }
 
 }

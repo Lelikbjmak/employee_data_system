@@ -15,6 +15,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.AuthenticationException;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.argon2.Argon2PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -30,8 +32,9 @@ public class AuthenticationServiceImpl implements AuthenticationService {
 
     private final UserRepository userRepository;
 
-    private final UserService userService;
+    private final UserDetailsService userDetailsService;
 
+    private final UserService userService;
     private final Argon2PasswordEncoder passwordEncoder;
 
     @Override
@@ -78,8 +81,8 @@ public class AuthenticationServiceImpl implements AuthenticationService {
 
         HttpStatus status = HttpStatus.ACCEPTED;
 
-        User user = userService.findByUsername(request.getUsername());
-        String token = jwtService.generateToken(user);
+        UserDetails userDetails = userDetailsService.loadUserByUsername(request.getUsername());
+        String token = jwtService.generateToken(userDetails);
 
         return AuthenticationSuccessResponseDto.builder()
                 .code(status.value())
