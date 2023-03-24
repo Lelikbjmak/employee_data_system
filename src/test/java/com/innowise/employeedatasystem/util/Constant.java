@@ -11,8 +11,11 @@ public class Constant {
         public static final String GET_X = "/api/employee/get";
         public static final String GET_ALL_X = "/api/employee/all";
         public static final String DELETE_X = "/api/employee/delete";
+        public static final String DELETE_ALL_X = "/api/employee/delete";
         public static final String EDIT_X = "/api/employee/edit";
+        public static final String EDIT_ALL_X = "/api/employee/edit/all";
         public static final String ADD_X = "/api/employee/add";
+        public static final String ADD_ALL_X = "/api/employee/add/all";
     }
 
     public static class Message {
