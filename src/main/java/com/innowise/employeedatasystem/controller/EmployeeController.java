@@ -4,12 +4,15 @@ import com.innowise.employeedatasystem.dto.*;
 import com.innowise.employeedatasystem.serviceimpl.EmployeeManagementServiceImpl;
 import com.innowise.employeedatasystem.util.ApiConstant;
 import com.innowise.employeedatasystem.util.GeneralConstant;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+@Validated
 @RestController
 @RequiredArgsConstructor
 @RequestMapping(value = ApiConstant.ApiMappings.EMPLOYEE_ROUT)
@@ -19,13 +22,13 @@ public class EmployeeController {
 
     @PostMapping(value = ApiConstant.ApiPath.ADD_ALL_X)
     @ResponseStatus(HttpStatus.CREATED)
-    public RegistrationResponseDto addEmployeeList(@RequestBody List<RegistrationDto> registrationDtoList) {
+    public RegistrationResponseDto addEmployeeList(@RequestBody @Valid List<RegistrationDto> registrationDtoList) {
         return employeeManagementService.registerEmployeeList(registrationDtoList);
     }
 
     @PostMapping(value = ApiConstant.ApiPath.ADD_X)
     @ResponseStatus(HttpStatus.CREATED)
-    public RegistrationResponseDto addEmployee(@RequestBody RegistrationDto registrationDto) {
+    public RegistrationResponseDto addEmployee(@RequestBody @Valid RegistrationDto registrationDto) {
         return employeeManagementService.registerEmployee(registrationDto);
     }
 

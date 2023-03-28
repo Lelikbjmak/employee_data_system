@@ -13,7 +13,7 @@ import java.util.Map;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@JsonPropertyOrder({ "timestamp", "status", "code", "message", "path"})
+@JsonPropertyOrder({"timestamp", "status", "code", "message", "additional"})
 public class ExceptionResponseDto {
 
     private Instant timestamp;

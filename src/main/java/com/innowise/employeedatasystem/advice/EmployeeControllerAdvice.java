@@ -5,66 +5,52 @@ import com.innowise.employeedatasystem.dto.ExceptionResponseDto;
 import com.innowise.employeedatasystem.exception.EmployeeIsNotFoundException;
 import com.innowise.employeedatasystem.exception.RoleIsNotFoundException;
 import com.innowise.employeedatasystem.exception.UserIsNotFoundException;
+import com.innowise.employeedatasystem.provider.ExceptionResponseProvider;
+import com.innowise.employeedatasystem.provider.ResponseEntityProvider;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
-import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
+import org.springframework.web.bind.annotation.RestControllerAdvice;
 
-@ControllerAdvice(assignableTypes = EmployeeController.class)
-public class EmployeeControllerAdvice extends ResponseEntityExceptionHandler {
+@RestControllerAdvice(assignableTypes = EmployeeController.class)
+@RequiredArgsConstructor
+public class EmployeeControllerAdvice {
+
+    private final ResponseEntityProvider<ExceptionResponseDto> responseEntityProvider;
+
+    private final ExceptionResponseProvider exceptionResponseProvider;
 
     @ExceptionHandler(EmployeeIsNotFoundException.class)
-    public ResponseEntity<Object> employeeIsNotFoundExceptionHandling(EmployeeIsNotFoundException e) {
+    public ResponseEntity<ExceptionResponseDto> employeeIsNotFoundExceptionHandling(EmployeeIsNotFoundException e) {
 
         HttpStatus status = HttpStatus.NOT_FOUND;
 
-        ExceptionResponseDto responseDto = ExceptionResponseDto.builder()
-                .timestamp(e.getTimestamp())
-                .status(status.name())
-                .code(status.value())
-                .message(e.getMessage())
-                .additional(e.getAdditional())
-                .build();
+        ExceptionResponseDto responseDto = exceptionResponseProvider.getExceptionResponse(
+                status, e.getMessage(), e.getAdditional());
 
-        return buildResponseEntity(responseDto, status);
+        return responseEntityProvider.generateResponseEntity(responseDto, status);
     }
 
     @ExceptionHandler(RoleIsNotFoundException.class)
-    public ResponseEntity<Object> roleIsNotFoundExceptionHandling(RoleIsNotFoundException e) {
+    public ResponseEntity<ExceptionResponseDto> roleIsNotFoundExceptionHandling(RoleIsNotFoundException e) {
 
         HttpStatus status = HttpStatus.NOT_FOUND;
 
-        ExceptionResponseDto responseDto = ExceptionResponseDto.builder()
-                .timestamp(e.getTimestamp())
-                .status(status.name())
-                .code(status.value())
-                .message(e.getMessage())
-                .additional(e.getAdditional())
-                .build();
+        ExceptionResponseDto responseDto = exceptionResponseProvider.getExceptionResponse(
+                status, e.getMessage(), e.getAdditional());
 
-        return buildResponseEntity(responseDto, status);
+        return responseEntityProvider.generateResponseEntity(responseDto, status);
     }
 
     @ExceptionHandler(UserIsNotFoundException.class)
-    public ResponseEntity<Object> usernameNotFoundExceptionHandling(UserIsNotFoundException e) {
+    public ResponseEntity<ExceptionResponseDto> usernameNotFoundExceptionHandling(UserIsNotFoundException e) {
 
         HttpStatus status = HttpStatus.NOT_FOUND;
 
-        ExceptionResponseDto responseDto = ExceptionResponseDto.builder()
-                .timestamp(e.getTimestamp())
-                .status(status.name())
-                .code(status.value())
-                .message(e.getMessage())
-                .additional(e.getAdditional())
-                .build();
+        ExceptionResponseDto responseDto = exceptionResponseProvider.getExceptionResponse(
+                status, e.getMessage(), e.getAdditional());
 
-        return buildResponseEntity(responseDto, status);
-    }
-
-
-    private static ResponseEntity<Object> buildResponseEntity(ExceptionResponseDto exceptionResponseDto,
-                                                              HttpStatus status) {
-        return new ResponseEntity<>(exceptionResponseDto, status);
+        return responseEntityProvider.generateResponseEntity(responseDto, status);
     }
 }
