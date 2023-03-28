@@ -4,14 +4,15 @@ package com.innowise.employeedatasystem.controller;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.innowise.employeedatasystem.EmployeeDataSystemApplication;
 import com.innowise.employeedatasystem.dto.*;
+import com.innowise.employeedatasystem.entity.RoleEnum;
 import com.innowise.employeedatasystem.exception.EmployeeIsNotFoundException;
 import com.innowise.employeedatasystem.serviceimpl.EmployeeServiceImpl;
 import com.innowise.employeedatasystem.util.Constant;
+import com.innowise.employeedatasystem.util.EntityConstant;
 import com.innowise.employeedatasystem.util.GeneralConstant;
-import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -36,6 +37,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @AutoConfigureMockMvc
 @ActiveProfiles(value = "test")
 @ExtendWith(SpringExtension.class)
+@TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 @ContextConfiguration(classes = {EmployeeDataSystemApplication.class})
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @Sql(value = "/sql/create-employee.sql", executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
@@ -56,6 +58,7 @@ class EmployeeControllerTest {
     }
 
     @Test
+    @Order(1)
     @DisplayName(value = "Context loads")
     void contextLoads() {
         Assertions.assertNotNull(objectMapper);
@@ -63,6 +66,7 @@ class EmployeeControllerTest {
     }
 
     @Test
+    @Order(2)
     @DisplayName(value = "`Get` Employee by Id.")
     @WithMockUser(authorities = {"ROLE_USER"})
     void successGetEmployeeById(@Value(value = "${employee.id}") Long id) throws Exception {
@@ -79,6 +83,7 @@ class EmployeeControllerTest {
     }
 
     @Test
+    @Order(3)
     @DisplayName(value = "`Get` Employee by Id (EMPLOYEE NOT FOUND).")
     @WithMockUser(authorities = {"ROLE_USER"})
     void failedGetEmployeeById() throws Exception {
@@ -98,25 +103,7 @@ class EmployeeControllerTest {
     }
 
     @Test
-    @DisplayName(value = "`Get` all Employees.")
-    @WithMockUser(authorities = {"ROLE_USER"})
-    void successGetAllEmployees() throws Exception {
-
-        int size = employeeService.getAllEmployees().size();
-
-        String responseString = mockMvc.perform(get(Constant.ApiRoutes.GET_ALL_X)
-                        .accept(MediaType.APPLICATION_JSON_VALUE))
-                .andDo(print())
-                .andExpect(status().isOk())
-                .andReturn().getResponse().getContentAsString();
-
-        List<EmployeeDto> employeeDtoList = objectMapper.readValue(responseString, List.class);
-
-        Assertions.assertNotNull(employeeDtoList, "Response can't be deserialized to List<EmployeeDto>.class.");
-        Assertions.assertEquals(size, employeeDtoList.size());
-    }
-
-    @Test
+    @Order(4)
     @DisplayName(value = "`Get` Employee by username.")
     @WithMockUser(authorities = {"ROLE_USER"})
     void successGetEmployeeByUserUsername(@Value(value = "${user.username}") String username) throws Exception {
@@ -134,6 +121,7 @@ class EmployeeControllerTest {
     }
 
     @Test
+    @Order(5)
     @DisplayName(value = "`Get` Employee by username (EMPLOYEE NOT FOUND).")
     @WithMockUser(authorities = {"ROLE_USER"})
     void failedGetEmployeeByUserUsernameEmployeeNotFound() throws Exception {
@@ -154,6 +142,27 @@ class EmployeeControllerTest {
     }
 
     @Test
+    @Order(6)
+    @DisplayName(value = "`Get` all Employees.")
+    @WithMockUser(authorities = {"ROLE_USER"})
+    void successGetAllEmployees() throws Exception {
+
+        int size = employeeService.getAllEmployees().size();
+
+        String responseString = mockMvc.perform(get(Constant.ApiRoutes.GET_ALL_X)
+                        .accept(MediaType.APPLICATION_JSON_VALUE))
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andReturn().getResponse().getContentAsString();
+
+        List<EmployeeDto> employeeDtoList = objectMapper.readValue(responseString, List.class);
+
+        Assertions.assertNotNull(employeeDtoList, "Response can't be deserialized to List<EmployeeDto>.class.");
+        Assertions.assertEquals(size, employeeDtoList.size());
+    }
+
+    @Test
+    @Order(7)
     @DisplayName(value = "`Delete` Employee.")
     @WithMockUser(authorities = {"ROLE_ADMIN"})
     void successDeleteEmployee(@Value(value = "${employee.id}") Long id) throws Exception {
@@ -175,6 +184,7 @@ class EmployeeControllerTest {
     }
 
     @Test
+    @Order(8)
     @DisplayName(value = "`Delete` Employee list.")
     @WithMockUser(authorities = {"ROLE_ADMIN"})
     void successDeleteEmployeeList() throws Exception {
@@ -197,6 +207,7 @@ class EmployeeControllerTest {
     }
 
     @Test
+    @Order(9)
     @DisplayName(value = "`Edit` Employee.")
     @WithMockUser(authorities = {"ROLE_ADMIN"})
     void successEditEmployee() throws Exception {
@@ -233,6 +244,7 @@ class EmployeeControllerTest {
     }
 
     @Test
+    @Order(10)
     @DisplayName(value = "`Edit` Employee List.")
     @WithMockUser(authorities = {"ROLE_ADMIN"})
     void successEditEmployeeList(@Value(value = "${employee.id}") Long id) throws Exception {
@@ -261,20 +273,92 @@ class EmployeeControllerTest {
     }
 
     @Test
+    @Order(11)
     @DisplayName(value = "`Add` Employee.")
     @WithMockUser(authorities = {"ROLE_ADMIN"})
     @Sql(value = "/sql/before-registration.sql", executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
     @Sql(value = "/sql/truncate-tables.sql", executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
     void successAddEmployee(
-            @Value(value = "${user.username}") String username, @Value(value = "${user.mail}") String mail,
-            @Value(value = "${user.password}") String password, @Value(value = "${employee.first-name}") String firstName,
+            @Value(value = "${user.mail}") String mail, @Value(value = "${employee.first-name}") String firstName,
             @Value(value = "${employee.last-name}") String lastName, @Value(value = "${employee.middle-name}") String middleName,
             @Value(value = "${user.role-admin}") String roleAdmin) throws Exception {
 
         RegistrationDto registrationDto = RegistrationDto.builder()
                 .userDto(RegistrationUserDto.builder()
-                        .username(username)
-                        .password(password)
+                        .username("username")
+                        .password("password1A")
+                        .mail(mail)
+                        .roles(Set.of(roleAdmin))
+                        .build())
+                .employeeDto(RegistrationEmployeeDto.builder()
+                        .firstName(firstName)
+                        .lastName(lastName)
+                        .middleName(middleName)
+                        .hireDate(new Date())
+                        .build())
+                .build();
+
+        mockMvc.perform(post(Constant.ApiRoutes.ADD_X)
+                        .contentType(MediaType.APPLICATION_JSON_VALUE)
+                        .content(objectMapper.writeValueAsString(registrationDto))
+                        .accept(MediaType.APPLICATION_JSON_VALUE))
+                .andDo(print())
+                .andExpect(status().isCreated())
+                .andReturn().getResponse().getContentAsString();
+
+        Assertions.assertEquals(1, employeeService.getAllEmployees().size());
+    }
+
+    @Test
+    @Order(12)
+    @DisplayName(value = "`Add` Employee (ROLE IS NOT FOUND).")
+    @WithMockUser(authorities = {"ROLE_ADMIN"})
+    void failedAddEmployeeInvalidRole() throws Exception {
+
+        RegistrationDto registrationDto = RegistrationDto.builder()
+                .userDto(RegistrationUserDto.builder()
+                        .username("username")
+                        .roles(Set.of("INVALID"))
+                        .mail("mail@gmail.com")
+                        .password("password1A")
+                        .build())
+                .employeeDto(RegistrationEmployeeDto.builder()
+                        .firstName("firstName")
+                        .lastName("middleName")
+                        .middleName("firstName")
+                        .hireDate(new Date())
+                        .build())
+                .build();
+
+        String responseString = mockMvc.perform(post(Constant.ApiRoutes.ADD_ALL_X)
+                        .contentType(MediaType.APPLICATION_JSON_VALUE)
+                        .content(objectMapper.writeValueAsString(List.of(registrationDto)))
+                        .accept(MediaType.APPLICATION_JSON_VALUE))
+                .andDo(print())
+                .andExpect(status().isNotFound())
+                .andReturn().getResponse().getContentAsString();
+
+        ExceptionResponseDto failedResponseDto = objectMapper.readValue(responseString, ExceptionResponseDto.class);
+        Assertions.assertNotNull(failedResponseDto, "Response can't be deserialized to ExceptionResponseDto.class.");
+        Assertions.assertEquals(HttpStatus.NOT_FOUND.value(), failedResponseDto.getCode());
+        Assertions.assertEquals(GeneralConstant.Message.ROLE_IS_NOT_FOUND_EXCEPTION_MESSAGE, failedResponseDto.getMessage());
+    }
+
+    @Test
+    @Order(13)
+    @DisplayName(value = "`Add` Employee List.")
+    @WithMockUser(authorities = {"ROLE_ADMIN"})
+    @Sql(value = "/sql/before-registration.sql", executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
+    @Sql(value = "/sql/truncate-tables.sql", executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
+    void successAddEmployeeList(
+            @Value(value = "${user.mail}") String mail, @Value(value = "${employee.first-name}") String firstName,
+            @Value(value = "${employee.last-name}") String lastName, @Value(value = "${employee.middle-name}") String middleName,
+            @Value(value = "${user.role-admin}") String roleAdmin) throws Exception {
+
+        RegistrationDto registrationDto = RegistrationDto.builder()
+                .userDto(RegistrationUserDto.builder()
+                        .username("username")
+                        .password("password1A")
                         .mail(mail)
                         .roles(Set.of(roleAdmin))
                         .build())
@@ -297,22 +381,32 @@ class EmployeeControllerTest {
         Assertions.assertEquals(1, employeeService.getAllEmployees().size());
     }
 
-
     @Test
-    @DisplayName(value = "`Add` Employee (ROLE IS NOT FOUND).")
+    @Order(13)
+    @DisplayName(value = "`Add` Employee List (ROLE IS NOT FOUND).")
     @WithMockUser(authorities = {"ROLE_ADMIN"})
-    void failedAddEmployeeInvalidRole() throws Exception {
+    @Sql(value = "/sql/before-registration.sql", executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
+    @Sql(value = "/sql/truncate-tables.sql", executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
+    void failedAddEmployeeListInvalidRole(
+            @Value(value = "${user.mail}") String mail, @Value(value = "${employee.first-name}") String firstName,
+            @Value(value = "${employee.last-name}") String lastName, @Value(value = "${employee.middle-name}") String middleName) throws Exception {
 
         RegistrationDto registrationDto = RegistrationDto.builder()
                 .userDto(RegistrationUserDto.builder()
+                        .username("username")
+                        .password("password1A")
+                        .mail(mail)
                         .roles(Set.of("INVALID"))
                         .build())
                 .employeeDto(RegistrationEmployeeDto.builder()
+                        .firstName(firstName)
+                        .lastName(lastName)
+                        .middleName(middleName)
                         .hireDate(new Date())
                         .build())
                 .build();
 
-        String responseString = mockMvc.perform(post(Constant.ApiRoutes.ADD_ALL_X)
+        mockMvc.perform(post(Constant.ApiRoutes.ADD_ALL_X)
                         .contentType(MediaType.APPLICATION_JSON_VALUE)
                         .content(objectMapper.writeValueAsString(List.of(registrationDto)))
                         .accept(MediaType.APPLICATION_JSON_VALUE))
@@ -320,9 +414,122 @@ class EmployeeControllerTest {
                 .andExpect(status().isNotFound())
                 .andReturn().getResponse().getContentAsString();
 
-        ExceptionResponseDto failedResponseDto = objectMapper.readValue(responseString, ExceptionResponseDto.class);
-        Assertions.assertNotNull(failedResponseDto, "Response can't be deserialized to ExceptionResponseDto.class.");
-        Assertions.assertEquals(HttpStatus.NOT_FOUND.value(), failedResponseDto.getCode());
-        Assertions.assertEquals(GeneralConstant.Message.ROLE_IS_NOT_FOUND_EXCEPTION_MESSAGE, failedResponseDto.getMessage());
+        Assertions.assertEquals(0, employeeService.getAllEmployees().size());
+    }
+
+    @Test
+    @Order(14)
+    @DisplayName(value = "`Add` Employee List (UserDto & EmployeeDto fields are blank).")
+    @WithMockUser(authorities = {"ROLE_ADMIN"})
+    @Sql(value = "/sql/before-registration.sql", executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
+    @Sql(value = "/sql/truncate-tables.sql", executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
+    void failedAddEmployeeListDtoHasBlankFields() throws Exception {
+
+        RegistrationDto registrationDto = RegistrationDto.builder()
+                .userDto(RegistrationUserDto.builder()
+                        .username("")
+                        .password("")
+                        .mail("")
+                        .roles(Set.of(RoleEnum.ROLE_USER.name()))
+                        .build())
+                .employeeDto(RegistrationEmployeeDto.builder()
+                        .firstName("")
+                        .lastName("")
+                        .middleName("")
+                        .hireDate(new Date())
+                        .build())
+                .build();
+
+        String response = mockMvc.perform(post(Constant.ApiRoutes.ADD_ALL_X)
+                        .contentType(MediaType.APPLICATION_JSON_VALUE)
+                        .content(objectMapper.writeValueAsString(List.of(registrationDto)))
+                        .accept(MediaType.APPLICATION_JSON_VALUE))
+                .andDo(print())
+                .andExpect(status().isBadRequest())
+                .andReturn().getResponse().getContentAsString();
+
+        Assertions.assertTrue(response.contains(EntityConstant.Validation.User.USERNAME_MANDATORY_CONSTRAINT_MASSAGE));
+        Assertions.assertTrue(response.contains(EntityConstant.Validation.User.PASSWORD_MANDATORY_CONSTRAINT_MASSAGE));
+        Assertions.assertTrue(response.contains(EntityConstant.Validation.User.MAIL_NOT_VALID_FORMAT_CONSTRAINT_MESSAGE));
+
+        Assertions.assertTrue(response.contains(EntityConstant.Validation.Employee.FIRST_NAME_MANDATORY_CONSTRAINT_MESSAGE));
+        Assertions.assertTrue(response.contains(EntityConstant.Validation.Employee.LAST_NAME_MANDATORY_CONSTRAINT_MESSAGE));
+        Assertions.assertTrue(response.contains(EntityConstant.Validation.Employee.MIDDLE_NAME_MANDATORY_CONSTRAINT_MESSAGE));
+
+        Assertions.assertEquals(0, employeeService.getAllEmployees().size());
+    }
+
+    @Test
+    @Order(16)
+    @DisplayName(value = "`Add` Employee List (NAT VALID USERNAME AND PASSWORD (INCORRECT LENGTH)).")
+    @WithMockUser(authorities = {"ROLE_ADMIN"})
+    @Sql(value = "/sql/before-registration.sql", executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
+    @Sql(value = "/sql/truncate-tables.sql", executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
+    void failedAddEmployeeListNotValidUsernameAndPasswordLength() throws Exception {
+
+        RegistrationDto registrationDto = RegistrationDto.builder()
+                .userDto(RegistrationUserDto.builder()
+                        .username("1")
+                        .password("1")
+                        .mail("mail@gmail.com")
+                        .roles(Set.of(RoleEnum.ROLE_USER.name()))
+                        .build())
+                .employeeDto(RegistrationEmployeeDto.builder()
+                        .firstName("")
+                        .lastName("")
+                        .middleName("")
+                        .hireDate(new Date())
+                        .build())
+                .build();
+
+        String response = mockMvc.perform(post(Constant.ApiRoutes.ADD_ALL_X)
+                        .contentType(MediaType.APPLICATION_JSON_VALUE)
+                        .content(objectMapper.writeValueAsString(List.of(registrationDto)))
+                        .accept(MediaType.APPLICATION_JSON_VALUE))
+                .andDo(print())
+                .andExpect(status().isBadRequest())
+                .andReturn().getResponse().getContentAsString();
+
+        Assertions.assertTrue(response.contains(EntityConstant.Validation.User.USERNAME_LENGTH_CONSTRAINT_MASSAGE));
+        Assertions.assertTrue(response.contains(EntityConstant.Validation.User.PASSWORD_LENGTH_CONSTRAINT_MASSAGE));
+
+        Assertions.assertEquals(0, employeeService.getAllEmployees().size());
+    }
+
+    @Test
+    @Order(17)
+    @DisplayName(value = "`Add` Employee List (NAT VALID USERNAME AND PASSWORD (INCORRECT FORMAT)).")
+    @WithMockUser(authorities = {"ROLE_ADMIN"})
+    @Sql(value = "/sql/before-registration.sql", executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
+    @Sql(value = "/sql/truncate-tables.sql", executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
+    void failedAddEmployeeListNotValidUsernameAndPasswordFormat() throws Exception {
+
+        RegistrationDto registrationDto = RegistrationDto.builder()
+                .userDto(RegistrationUserDto.builder()
+                        .username("^^^^^^")
+                        .password("&$$$$$$$")
+                        .mail("mail@gmail.com")
+                        .roles(Set.of(RoleEnum.ROLE_USER.name()))
+                        .build())
+                .employeeDto(RegistrationEmployeeDto.builder()
+                        .firstName("")
+                        .lastName("")
+                        .middleName("")
+                        .hireDate(new Date())
+                        .build())
+                .build();
+
+        String response = mockMvc.perform(post(Constant.ApiRoutes.ADD_ALL_X)
+                        .contentType(MediaType.APPLICATION_JSON_VALUE)
+                        .content(objectMapper.writeValueAsString(List.of(registrationDto)))
+                        .accept(MediaType.APPLICATION_JSON_VALUE))
+                .andDo(print())
+                .andExpect(status().isBadRequest())
+                .andReturn().getResponse().getContentAsString();
+
+        Assertions.assertTrue(response.contains(EntityConstant.Validation.User.USERNAME_NOT_VALID_FORMAT_MESSAGE));
+        Assertions.assertTrue(response.contains(EntityConstant.Validation.User.PASSWORD_NOT_VALID_FORMAT_MESSAGE));
+
+        Assertions.assertEquals(0, employeeService.getAllEmployees().size());
     }
 }
