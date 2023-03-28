@@ -1,5 +1,8 @@
 package com.innowise.employeedatasystem.dto;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonRootName;
+import com.innowise.employeedatasystem.util.DtoConstant;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -11,6 +14,8 @@ import java.util.Set;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
+@JsonInclude(value = JsonInclude.Include.NON_NULL)
+@JsonRootName(value = DtoConstant.User.USER_JSON_ROOT_NAME)
 public class UserDto {
 
     private String username;
