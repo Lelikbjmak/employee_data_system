@@ -1,24 +1,32 @@
 package com.innowise.employeedatasystem.dto;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import com.fasterxml.jackson.annotation.JsonRootName;
+import com.innowise.employeedatasystem.annotation.ValidPassword;
+import com.innowise.employeedatasystem.annotation.ValidUsername;
+import com.innowise.employeedatasystem.util.DtoConstant;
+import com.innowise.employeedatasystem.util.EntityConstant;
+import jakarta.validation.constraints.Email;
+import lombok.*;
 
 import java.util.Set;
 
 @Getter
+@Setter
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
+@JsonRootName(value = DtoConstant.User.USER_JSON_ROOT_NAME)
 public class RegistrationUserDto {
 
+    @ValidUsername
     private String username;
 
+    @ValidPassword
     private String password;
 
+    @Email(regexp = EntityConstant.Validation.User.MAIL_PATTERN,
+            message = EntityConstant.Validation.User.MAIL_NOT_VALID_FORMAT_CONSTRAINT_MESSAGE)
     private String mail;
 
     private Set<String> roles;
-
 }
