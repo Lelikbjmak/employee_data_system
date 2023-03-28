@@ -25,6 +25,7 @@ public class GeneralConstant {
 
         public static final String ROLE_IS_NOT_FOUND_EXCEPTION_MESSAGE = "Role is not found.";
 
+        public static final String NOTE_VALID_DATA_EXCEPTION_MESSAGE = "Not valid derived data.";
     }
 
     @UtilityClass
@@ -46,6 +47,5 @@ public class GeneralConstant {
         public static final String EMPLOYEE_LAST_NAME_FIELD = "lastName";
         public static final String EMPLOYEE_MIDDLE_NAME_FIELD = "middleName";
         public static final String EMPLOYEE_HIRE_DATE_FIELD = "hireDate";
-
     }
 }
