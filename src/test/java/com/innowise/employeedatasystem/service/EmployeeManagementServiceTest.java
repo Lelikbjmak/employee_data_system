@@ -68,10 +68,10 @@ class EmployeeManagementServiceTest {
 
         List<RegistrationDto> registrationDtoList = List.of(mockRegistrationDto);
 
-        when(userMapper.toUserEntity(any(RegistrationUserDto.class))).thenReturn(mockUser);
-        when(employeeMapper.toEmployeeEntity(any(RegistrationEmployeeDto.class))).thenReturn(mockEmployee);
+        when(userMapper.mapToEntity(any(RegistrationUserDto.class))).thenReturn(mockUser);
+        when(employeeMapper.mapToEntity(any(RegistrationEmployeeDto.class))).thenReturn(mockEmployee);
         when(employeeService.saveEmployee(any(Employee.class))).thenReturn(mockEmployee);
-        when(employeeMapper.toEmployeeDto(any(Employee.class))).thenReturn(mockEmployeeDto);
+        when(employeeMapper.mapToDto(any(Employee.class))).thenReturn(mockEmployeeDto);
 
         RegistrationResponseDto actualResponse = employeeManagementService.registerEmployeeList(registrationDtoList);
 
@@ -98,10 +98,10 @@ class EmployeeManagementServiceTest {
                 .userDto(RegistrationUserDto.builder().build())
                 .build();
 
-        when(userMapper.toUserEntity(any(RegistrationUserDto.class))).thenReturn(mockUser);
-        when(employeeMapper.toEmployeeEntity(any(RegistrationEmployeeDto.class))).thenReturn(mockEmployee);
+        when(userMapper.mapToEntity(any(RegistrationUserDto.class))).thenReturn(mockUser);
+        when(employeeMapper.mapToEntity(any(RegistrationEmployeeDto.class))).thenReturn(mockEmployee);
         when(employeeService.saveEmployee(any(Employee.class))).thenReturn(mockEmployee);
-        when(employeeMapper.toEmployeeDto(any(Employee.class))).thenReturn(mockEmployeeDto);
+        when(employeeMapper.mapToDto(any(Employee.class))).thenReturn(mockEmployeeDto);
 
         RegistrationResponseDto actualResponse = employeeManagementService.registerEmployee(mockRegistrationDto);
 
@@ -138,7 +138,7 @@ class EmployeeManagementServiceTest {
         );
 
         when(employeeService.getAllEmployees()).thenReturn(employeeList);
-        when(employeeMapper.toEmployeeDto(any(Employee.class)))
+        when(employeeMapper.mapToDto(any(Employee.class)))
                 .thenAnswer(invocationOnMock -> {
                     Employee employee = invocationOnMock.getArgument(0);
                     return EmployeeDto.builder()
@@ -152,10 +152,9 @@ class EmployeeManagementServiceTest {
 
         for (Employee employee :
                 employeeList) {
-            verify(employeeMapper).toEmployeeDto(employee);
+            verify(employeeMapper).mapToDto(employee);
         }
 
-        actualEmployeeDtoList.forEach(p -> System.err.println(p.getId()));
         for (int i = 0; i < expectedEmployeeDtoList.size(); i++) {
             assertEquals(expectedEmployeeDtoList.get(i).getId(),
                     actualEmployeeDtoList.get(i).getId());
@@ -191,7 +190,7 @@ class EmployeeManagementServiceTest {
                 .firstName("NEW")
                 .build();
         when(employeeService.saveEmployee(any(Employee.class))).thenReturn(expectedUpdatedEmployee);
-        when(employeeMapper.toUpdatedEmployeeDto(expectedUpdatedEmployee)).thenReturn(updatedEmployeeDto);
+        when(employeeMapper.mapToUpdatedEmployeeDto(expectedUpdatedEmployee)).thenReturn(updatedEmployeeDto);
 
         UpdatedEmployeeDto editedEmployee = employeeManagementService.editEmployee(employeeId, employeeDto);
         Assertions.assertEquals(expectedUpdatedEmployee.getFirstName(), editedEmployee.getFirstName());

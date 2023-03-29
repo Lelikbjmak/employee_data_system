@@ -1,45 +1,16 @@
 package com.innowise.employeedatasystem.mapper;
 
 import com.innowise.employeedatasystem.entity.Role;
-import com.innowise.employeedatasystem.entity.RoleEnum;
-import com.innowise.employeedatasystem.exception.RoleIsNotFoundException;
-import com.innowise.employeedatasystem.serviceimpl.RoleServiceImpl;
-import com.innowise.employeedatasystem.util.GeneralConstant;
-import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Component;
+import org.mapstruct.Mapper;
+import org.mapstruct.MappingConstants;
 
-import java.time.Instant;
-import java.util.HashSet;
-import java.util.Map;
 import java.util.Set;
-import java.util.stream.Collectors;
 
-@Component
-@RequiredArgsConstructor
-public class RoleSetMapper {
+@Mapper(componentModel = MappingConstants.ComponentModel.SPRING, uses = {RoleMapper.class})
+public interface RoleSetMapper {
 
-    private final RoleServiceImpl roleService;
+    Set<Role> toRoleEntitySet(Set<String> roles);
 
-    public Set<Role> toRoleEntitySet(Set<String> roles) {
-
-        Set<Role> roleSet = new HashSet<>(roles.size());
-
-        roles.forEach(role -> {
-            try {
-                roleSet.add(roleService.findByRole(RoleEnum.valueOf(role)));
-            } catch (IllegalArgumentException e) {
-                throw new RoleIsNotFoundException(GeneralConstant.Message.ROLE_IS_NOT_FOUND_EXCEPTION_MESSAGE,
-                        Instant.now(), Map.of(GeneralConstant.Field.ROLE_FIELD, role));
-            }
-        });
-
-        return roleSet;
-    }
-
-    public Set<String> toRoleDtoSet(Set<Role> roles) {
-        return roles.stream()
-                .map(role -> role.getRole().name())
-                .collect(Collectors.toSet());
-    }
+    Set<String> toRoleDtoSet(Set<Role> roles);
 
 }
