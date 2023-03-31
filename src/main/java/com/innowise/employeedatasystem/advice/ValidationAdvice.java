@@ -4,8 +4,10 @@ import com.innowise.employeedatasystem.dto.ExceptionResponseDto;
 import com.innowise.employeedatasystem.provider.ExceptionResponseProvider;
 import com.innowise.employeedatasystem.provider.ResponseEntityProvider;
 import com.innowise.employeedatasystem.util.GeneralConstant;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.ConstraintViolationException;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.FieldError;
@@ -16,6 +18,7 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 import java.util.HashMap;
 import java.util.Map;
 
+@Slf4j
 @RestControllerAdvice
 @RequiredArgsConstructor
 public class ValidationAdvice {
@@ -25,8 +28,11 @@ public class ValidationAdvice {
     private final ResponseEntityProvider<ExceptionResponseDto> responseEntityProvider;
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
-    public ResponseEntity<ExceptionResponseDto> notValidDerivedData(MethodArgumentNotValidException exception) {
+    public ResponseEntity<ExceptionResponseDto> notValidDerivedData(
+            MethodArgumentNotValidException exception, HttpServletRequest request) {
 
+        log.error("MethodArgumentNotValidException is thrown for: " + request.getRemoteAddr() +
+                "\nURI: " + request.getRequestURI());
         Map<String, Object> errors = extractConstraintsViolations(exception);
 
         HttpStatus status = HttpStatus.BAD_REQUEST;
@@ -37,8 +43,11 @@ public class ValidationAdvice {
     }
 
     @ExceptionHandler(ConstraintViolationException.class)
-    public ResponseEntity<ExceptionResponseDto> handleConstraintViolationException(ConstraintViolationException exception) {
+    public ResponseEntity<ExceptionResponseDto> handleConstraintViolationException(
+            ConstraintViolationException exception, HttpServletRequest request) {
 
+        log.error("ConstraintViolationException is thrown for: " + request.getRemoteAddr() +
+                "\nURI: " + request.getRequestURI());
         Map<String, Object> errors = extractConstraintsViolations(exception);
 
         HttpStatus status = HttpStatus.BAD_REQUEST;
