@@ -19,10 +19,14 @@ public abstract class RoleMapper {
     private RoleRepository roleRepository;
 
     public String mapToDto(Role role) {
+        if (role == null)
+            return null;
         return role.getRole().name();
     }
 
     public Role mapToEntity(String stringRole) {
+        if (stringRole == null)
+            return null;
         try {
             RoleEnum roleEnum = RoleEnum.valueOf(stringRole);
             return roleRepository.findByRole(roleEnum).orElseThrow(() -> new RoleIsNotFoundException(GeneralConstant.Message.ROLE_IS_NOT_FOUND_EXCEPTION_MESSAGE,
