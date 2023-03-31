@@ -1,7 +1,10 @@
 package com.innowise.employeedatasystem.dto;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.innowise.employeedatasystem.util.DtoConstant;
+import com.innowise.employeedatasystem.util.EntityConstant;
 import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotNull;
 import lombok.*;
 
 @Getter
@@ -12,10 +15,12 @@ import lombok.*;
 public class RegistrationDto {
 
     @Valid
-    @JsonProperty(value = "user")
+    @NotNull(message = EntityConstant.Validation.User.USER_MANDATORY_FOR_REGISTRATION_CONSTRAINT_MESSAGE)
+    @JsonProperty(value = DtoConstant.Json.JSON_USER_NAME)
     private RegistrationUserDto userDto;
 
     @Valid
-    @JsonProperty(value = "employee")
+    @NotNull(message = EntityConstant.Validation.Employee.EMPLOYEE_MANDATORY_FOR_REGISTRATION_CONSTRAINT_MESSAGE)
+    @JsonProperty(value = DtoConstant.Json.JSON_EMPLOYEE_NAME)
     private RegistrationEmployeeDto employeeDto;
 }

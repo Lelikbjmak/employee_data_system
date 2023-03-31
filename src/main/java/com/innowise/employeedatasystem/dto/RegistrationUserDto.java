@@ -6,6 +6,7 @@ import com.innowise.employeedatasystem.annotation.ValidUsername;
 import com.innowise.employeedatasystem.util.DtoConstant;
 import com.innowise.employeedatasystem.util.EntityConstant;
 import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotNull;
 import lombok.*;
 
 import java.util.Set;
@@ -28,5 +29,6 @@ public class RegistrationUserDto {
             message = EntityConstant.Validation.User.MAIL_NOT_VALID_FORMAT_CONSTRAINT_MESSAGE)
     private String mail;
 
+    @NotNull(message = EntityConstant.Validation.User.ROLE_SET_IS_MANDATORY_CONSTRAINT_MESSAGE)
     private Set<String> roles;
 }
