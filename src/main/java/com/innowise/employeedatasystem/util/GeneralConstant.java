@@ -26,6 +26,8 @@ public class GeneralConstant {
         public static final String ROLE_IS_NOT_FOUND_EXCEPTION_MESSAGE = "Role is not found.";
 
         public static final String NOTE_VALID_DATA_EXCEPTION_MESSAGE = "Not valid derived data.";
+
+        public static final String NULL_ENTITY_EXCEPTION_MESSAGE = "Entity is null.";
     }
 
     @UtilityClass
