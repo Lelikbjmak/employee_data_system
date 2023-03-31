@@ -53,4 +53,12 @@ class RoleMapperTest {
         Assertions.assertThrows(RoleIsNotFoundException.class,
                 () -> roleMapper.mapToEntity("INVALID"));
     }
+
+    @Test
+    @Order(5)
+    @DisplayName(value = "Map Null to Null")
+    void mustReturnNull() {
+        Assertions.assertNull(roleMapper.mapToEntity(null));
+        Assertions.assertNull(roleMapper.mapToDto(null));
+    }
 }
