@@ -1,5 +1,6 @@
 package com.innowise.employeedatasystem.mapper;
 
+import com.innowise.employeedatasystem.dto.RegistrationUserDto;
 import com.innowise.employeedatasystem.dto.UserDto;
 import com.innowise.employeedatasystem.entity.Role;
 import com.innowise.employeedatasystem.entity.RoleEnum;
@@ -65,5 +66,16 @@ class UserMapperTest {
         Assertions.assertEquals(roleSet.stream()
                 .map(role -> role.getRole().name())
                 .collect(Collectors.toSet()), userDto.getRoles());
+    }
+
+    @Test
+    @Order(4)
+    @DisplayName(value = "Map Null to Null")
+    void mustReturnNull() {
+        RegistrationUserDto registrationUserDto = null;
+        UserDto userDto = null;
+        Assertions.assertNull(userMapper.mapToEntity(userDto));
+        Assertions.assertNull(userMapper.mapToEntity(registrationUserDto));
+        Assertions.assertNull(userMapper.mapToDto(null));
     }
 }

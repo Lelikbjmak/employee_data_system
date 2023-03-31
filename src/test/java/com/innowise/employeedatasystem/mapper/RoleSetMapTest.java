@@ -54,4 +54,12 @@ class RoleSetMapTest {
         Assertions.assertThrows(RoleIsNotFoundException.class,
                 () -> roleSetMap.toRoleEntitySet(Set.of("INVALID")));
     }
+
+    @Test
+    @Order(4)
+    @DisplayName(value = "Map Null to Null")
+    void mustReturnNull() {
+        Assertions.assertNull(roleSetMap.toRoleEntitySet(null));
+        Assertions.assertNull(roleSetMap.toRoleDtoSet(null));
+    }
 }

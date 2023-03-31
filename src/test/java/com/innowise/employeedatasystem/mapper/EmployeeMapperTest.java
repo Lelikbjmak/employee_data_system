@@ -120,4 +120,16 @@ class EmployeeMapperTest {
         Assertions.assertEquals(firstName, employeeDto.getFirstName());
         Assertions.assertTrue(employeeDto.isUpdated());
     }
+
+    @Test
+    @Order(4)
+    @DisplayName(value = "Map Employee to UpdatedEmployeeDto.")
+    void mustReturnNullEmployee() {
+
+        EmployeeDto employeeDto = null;
+
+        Employee employee = employeeMapper.mapToEntity(employeeDto);
+
+        Assertions.assertNull(employee);
+    }
 }
