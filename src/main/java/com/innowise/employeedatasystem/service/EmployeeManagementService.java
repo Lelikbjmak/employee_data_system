@@ -12,7 +12,7 @@ public interface EmployeeManagementService {
 
     List<EmployeeDto> getAllEmployees();
 
-    List<UpdatedEmployeeDto> editEmployeeList(List<EmployeeDto> editEmployeeDtoList);
+    List<UpdatedEmployeeDto> editEmployeeList(List<EditEmployeeDto> editEmployeeDtoList);
 
     UpdatedEmployeeDto editEmployee(Long employeeToEditId, EmployeeDto editedEmployeeDto);
 
