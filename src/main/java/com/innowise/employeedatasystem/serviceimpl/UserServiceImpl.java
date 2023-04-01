@@ -1,6 +1,8 @@
 package com.innowise.employeedatasystem.serviceimpl;
 
+import com.innowise.employeedatasystem.entity.RoleEnum;
 import com.innowise.employeedatasystem.entity.User;
+import com.innowise.employeedatasystem.exception.NullEntityException;
 import com.innowise.employeedatasystem.exception.UserIsNotFoundException;
 import com.innowise.employeedatasystem.repo.UserRepository;
 import com.innowise.employeedatasystem.service.UserService;
@@ -29,11 +31,17 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public User save(User user) {
+        if (user == null)
+            throw new NullEntityException(GeneralConstant.Message.NULL_ENTITY_EXCEPTION_MESSAGE,
+                    Thread.currentThread().getStackTrace()[1].getMethodName(), RoleEnum.class.getName());
         return userRepository.save(user);
     }
 
     @Override
     public User registerUser(User user) {
+        if (user == null)
+            throw new NullEntityException(GeneralConstant.Message.NULL_ENTITY_EXCEPTION_MESSAGE,
+                    Thread.currentThread().getStackTrace()[1].getMethodName(), RoleEnum.class.getName());
         user.setPassword(passwordEncoder.encode(user.getPassword()));
         return save(user);
     }
