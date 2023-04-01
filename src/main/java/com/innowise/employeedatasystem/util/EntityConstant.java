@@ -15,11 +15,23 @@ public class EntityConstant {
 
     @UtilityClass
     public static class Column {
-        public static final String ID = "id";
         public static final String USER_ID = "user_id";
         public static final String ROLE_ID = "role_id";
         public static final String EMPLOYEE = "employee";
         public static final String ROLES = "roles";
+        public static final String USER_ENABLED_FIELD = "enabled";
+        public static final String USER_ACCOUNT_NON_EXPIRED_FIELD = "accountNonExpired";
+        public static final String USER_ACCOUNT_NON_LOCKED_FIELD = "accountNonLocked";
+        public static final String USER_CREDENTIALS_NON_EXPIRED_FIELD = "credentialsNonExpired";
+        public static final String USERNAME_FIELD = "username";
+        public static final String ROLE_FIELD = "role";
+        public static final String PASSWORD_FIELD = "password";
+        public static final String MAIL_FIELD = "mail";
+        public static final String ID_FIELD = "id";
+        public static final String EMPLOYEE_FIRST_NAME_FIELD = "firstName";
+        public static final String EMPLOYEE_LAST_NAME_FIELD = "lastName";
+        public static final String EMPLOYEE_MIDDLE_NAME_FIELD = "middleName";
+        public static final String EMPLOYEE_HIRE_DATE_FIELD = "hireDate";
     }
 
     @UtilityClass

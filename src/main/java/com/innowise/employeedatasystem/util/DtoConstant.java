@@ -23,5 +23,14 @@ public class DtoConstant {
         public static final String JSON_USER_DTO_NAME = "userDto";
         public static final String JSON_EMPLOYEE_NAME = "employee";
         public static final String JSON_USER_NAME = "user";
+        public static final String TIMESTAMP_FIELD_NAME = "timestamp";
+        public static final String STATUS_FIELD_NAME = "status";
+        public static final String CODE_FIELD_NAME = "code";
+        public static final String MESSAGE_FIELD_NAME = "message";
+        public static final String PATH_FIELD_NAME = "path";
+        public static final String ADDITIONAL_CONTENT_FIELD_NAME = "additional";
+        public static final String TOKEN_FIELD_NAME = "token";
+        public static final String IS_DELETED_FIELD_NAME = "isDeleted";
+        public static final String IS_UPDATED_FIELD_NAME = "isUpdated";
     }
 }
