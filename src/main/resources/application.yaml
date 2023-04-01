@@ -24,3 +24,7 @@ password-encoder:
 
 server:
   port: 7878
+
+logging:
+  pattern:
+    console: '%d{yyyy-MMM-dd HH:mm:ss.SSS} [%thread] %highlight(%-6level) %cyan(%logger{15}) - %msg %n'
