@@ -1,9 +1,12 @@
 package com.innowise.employeedatasystem.serviceimpl;
 
 import com.innowise.employeedatasystem.entity.Employee;
+import com.innowise.employeedatasystem.entity.RoleEnum;
 import com.innowise.employeedatasystem.exception.EmployeeIsNotFoundException;
+import com.innowise.employeedatasystem.exception.NullEntityException;
 import com.innowise.employeedatasystem.repo.EmployeeRepository;
 import com.innowise.employeedatasystem.service.EmployeeService;
+import com.innowise.employeedatasystem.util.EntityConstant;
 import com.innowise.employeedatasystem.util.GeneralConstant;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -23,7 +26,7 @@ public class EmployeeServiceImpl implements EmployeeService {
     public Employee findEmployeeByUserUsername(String username) {
         return employeeRepository.findByUser_username(username).orElseThrow(() ->
                 new EmployeeIsNotFoundException(GeneralConstant.Message.EMPLOYEE_IS_NOT_FOUND_BY_ID_EXCEPTION_MESSAGE,
-                        Instant.now(), Map.of(GeneralConstant.Field.USERNAME_FIELD, username)));
+                        Instant.now(), Map.of(EntityConstant.Column.USERNAME_FIELD, username)));
     }
 
     @Override
@@ -33,6 +36,9 @@ public class EmployeeServiceImpl implements EmployeeService {
 
     @Override
     public Employee saveEmployee(Employee employee) {
+        if (employee == null)
+            throw new NullEntityException(GeneralConstant.Message.NULL_ENTITY_EXCEPTION_MESSAGE,
+                    Thread.currentThread().getStackTrace()[1].getMethodName(), RoleEnum.class.getName());
         return employeeRepository.save(employee);
     }
 
@@ -55,7 +61,7 @@ public class EmployeeServiceImpl implements EmployeeService {
     public Employee getEmployeeById(Long id) throws EmployeeIsNotFoundException {
         return employeeRepository.findById(id).orElseThrow(() ->
                 new EmployeeIsNotFoundException(GeneralConstant.Message.EMPLOYEE_IS_NOT_FOUND_BY_ID_EXCEPTION_MESSAGE,
-                        Instant.now(), Map.of(GeneralConstant.Field.ID_FIELD, id)));
+                        Instant.now(), Map.of(EntityConstant.Column.ID_FIELD, id)));
 
     }
 
@@ -74,10 +80,10 @@ public class EmployeeServiceImpl implements EmployeeService {
         return employeeRepository.findByFirstNameAndLastNameAndMiddleNameAndHireDate(firstName, lastName, middleName, hireDate).orElseThrow(() ->
                 new EmployeeIsNotFoundException(GeneralConstant.Message.EMPLOYEE_IS_NOT_FOUND_BY_ID_EXCEPTION_MESSAGE,
                         Instant.now(), Map.of(
-                        GeneralConstant.Field.EMPLOYEE_FIRST_NAME_FIELD, firstName,
-                        GeneralConstant.Field.EMPLOYEE_LAST_NAME_FIELD, lastName,
-                        GeneralConstant.Field.EMPLOYEE_MIDDLE_NAME_FIELD, middleName,
-                        GeneralConstant.Field.EMPLOYEE_HIRE_DATE_FIELD, hireDate
+                        EntityConstant.Column.EMPLOYEE_FIRST_NAME_FIELD, firstName,
+                        EntityConstant.Column.EMPLOYEE_LAST_NAME_FIELD, lastName,
+                        EntityConstant.Column.EMPLOYEE_MIDDLE_NAME_FIELD, middleName,
+                        EntityConstant.Column.EMPLOYEE_HIRE_DATE_FIELD, hireDate
                 )));
     }
 
