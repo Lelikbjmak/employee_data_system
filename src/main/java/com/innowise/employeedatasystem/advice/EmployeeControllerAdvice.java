@@ -31,42 +31,55 @@ public class EmployeeControllerAdvice {
 
     @ExceptionHandler(EmployeeIsNotFoundException.class)
     public ResponseEntity<ExceptionResponseDto> handleEmployeeNotFound(
-            EmployeeIsNotFoundException e, HttpServletRequest request) {
+            EmployeeIsNotFoundException exception, HttpServletRequest request) {
+
+        log.error("Resolve exception: {} for URI {}. Message: \t{}",
+                exception.getClass().getName(), request.getRequestURI(), exception.getMessage());
 
         HttpStatus status = HttpStatus.NOT_FOUND;
 
         ExceptionResponseDto responseDto = exceptionResponseProvider.getExceptionResponse(
-                status, e.getMessage(), e.getAdditional());
+                status, exception.getMessage(), exception.getAdditional());
 
         return responseEntityProvider.generateResponseEntity(responseDto, status);
     }
 
     @ExceptionHandler(RoleIsNotFoundException.class)
     public ResponseEntity<ExceptionResponseDto> handleRoleNotFound(
-            RoleIsNotFoundException e, HttpServletRequest request) {
+            RoleIsNotFoundException exception, HttpServletRequest request) {
+
+        log.error("Resolve exception: {} for URI {}. Message: \t{}",
+                exception.getClass().getName(), request.getRequestURI(), exception.getMessage());
 
         HttpStatus status = HttpStatus.NOT_FOUND;
 
         ExceptionResponseDto responseDto = exceptionResponseProvider.getExceptionResponse(
-                status, e.getMessage(), e.getAdditional());
+                status, exception.getMessage(), exception.getAdditional());
 
         return responseEntityProvider.generateResponseEntity(responseDto, status);
     }
 
     @ExceptionHandler(UserIsNotFoundException.class)
     public ResponseEntity<ExceptionResponseDto> handleUsernameNotFound(
-            UserIsNotFoundException e, HttpServletRequest request) {
+            UserIsNotFoundException exception, HttpServletRequest request) {
+
+        log.error("Resolve exception: {} for URI {}. Message: \t{}",
+                exception.getClass().getName(), request.getRequestURI(), exception.getMessage());
 
         HttpStatus status = HttpStatus.NOT_FOUND;
 
         ExceptionResponseDto responseDto = exceptionResponseProvider.getExceptionResponse(
-                status, e.getMessage(), e.getAdditional());
+                status, exception.getMessage(), exception.getAdditional());
 
         return responseEntityProvider.generateResponseEntity(responseDto, status);
     }
 
     @ExceptionHandler(HttpMessageNotReadableException.class)
-    public ResponseEntity<ExceptionResponseDto> handleNullEntity() {
+    public ResponseEntity<ExceptionResponseDto> handleNullEntity(
+            HttpMessageNotReadableException exception, HttpServletRequest request) {
+
+        log.error("Resolve exception: {} for URI {}. Message: \t{}",
+                exception.getClass().getName(), request.getRequestURI(), exception.getMessage());
 
         HttpStatus status = HttpStatus.BAD_REQUEST;
 
@@ -77,12 +90,16 @@ public class EmployeeControllerAdvice {
     }
 
     @ExceptionHandler(MethodArgumentTypeMismatchException.class)
-    public ResponseEntity<ExceptionResponseDto> handleTypeMismatch(MethodArgumentTypeMismatchException exception) {
+    public ResponseEntity<ExceptionResponseDto> handleTypeMismatch(
+            MethodArgumentTypeMismatchException exception, HttpServletRequest request) {
+
+        log.error("Resolve exception: {} for URI {}. Message: \t{}",
+                exception.getClass().getName(), request.getRequestURI(), exception.getMessage());
 
         HttpStatus status = HttpStatus.BAD_REQUEST;
 
         ExceptionResponseDto responseDto = exceptionResponseProvider.getExceptionResponse(
-                status, exception.getMessage(),Map.of(
+                status, exception.getMessage(), Map.of(
                         exception.getName(), exception.getRequiredType().getName())
         );
 
