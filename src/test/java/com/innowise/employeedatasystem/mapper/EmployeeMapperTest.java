@@ -78,11 +78,11 @@ class EmployeeMapperTest {
         EmployeeDto employeeDto = employeeMapper.mapToDto(employee);
 
         Assertions.assertNotNull(employeeDto);
-        Assertions.assertEquals(firstName, employeeDto.getFirstName());
-        Assertions.assertEquals(username, employeeDto.getUserDto().getUsername());
+        Assertions.assertEquals(firstName, employeeDto.firstName());
+        Assertions.assertEquals(username, employeeDto.userDto().username());
         Assertions.assertEquals(roleSet.stream()
                 .map(role -> role.getRole().name())
-                .collect(Collectors.toSet()), employeeDto.getUserDto().getRoles());
+                .collect(Collectors.toSet()), employeeDto.userDto().roles());
     }
 
     @Test
@@ -99,7 +99,7 @@ class EmployeeMapperTest {
         DeletedEmployeeDto employeeDto = employeeMapper.mapToDeletedEmployeeDto(employee);
 
         Assertions.assertNotNull(employeeDto);
-        Assertions.assertEquals(firstName, employeeDto.getFirstName());
+        Assertions.assertEquals(firstName, employeeDto.firstName());
         Assertions.assertTrue(employeeDto.isDeleted());
     }
 
@@ -117,7 +117,7 @@ class EmployeeMapperTest {
         UpdatedEmployeeDto employeeDto = employeeMapper.mapToUpdatedEmployeeDto(employee);
 
         Assertions.assertNotNull(employeeDto);
-        Assertions.assertEquals(firstName, employeeDto.getFirstName());
+        Assertions.assertEquals(firstName, employeeDto.firstName());
         Assertions.assertTrue(employeeDto.isUpdated());
     }
 

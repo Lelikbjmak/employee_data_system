@@ -25,8 +25,8 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.function.Supplier;
 
-import static com.innowise.employeedatasystem.util.GeneralConstant.Feature.JWT_TOKEN_SECRET_KEY;
-import static com.innowise.employeedatasystem.util.GeneralConstant.Feature.JWT_TOKEN_VALIDITY;
+import static com.innowise.employeedatasystem.util.GeneralConstant.JwtFeature.JWT_TOKEN_SECRET_KEY;
+import static com.innowise.employeedatasystem.util.GeneralConstant.JwtFeature.JWT_TOKEN_VALIDITY;
 
 @ExtendWith(MockitoExtension.class)
 class JwtServiceTest {
