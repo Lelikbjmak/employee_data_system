@@ -31,7 +31,7 @@ public class GeneralConstant {
     }
 
     @UtilityClass
-    public static class Feature {
+    public static class JwtFeature {
         public static final String JWT_TOKEN_SECRET_KEY = "2B4D6251655468576D5A7134743777217A25432A462D4A404E635266556A586E";
         public static final long JWT_TOKEN_VALIDITY = 1000L * 60 * 60 * 2;  // 2 hours
 
@@ -39,15 +39,4 @@ public class GeneralConstant {
         public static final int BEARER_TOKEN_START_INDEX = 7;
     }
 
-    @UtilityClass
-    public static class Field {
-        public static final String USERNAME_FIELD = "username";
-        public static final String ROLE_FIELD = "role";
-        public static final String PASSWORD_FIELD = "password";
-        public static final String ID_FIELD = "id";
-        public static final String EMPLOYEE_FIRST_NAME_FIELD = "firstName";
-        public static final String EMPLOYEE_LAST_NAME_FIELD = "lastName";
-        public static final String EMPLOYEE_MIDDLE_NAME_FIELD = "middleName";
-        public static final String EMPLOYEE_HIRE_DATE_FIELD = "hireDate";
-    }
 }

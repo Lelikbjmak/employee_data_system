@@ -4,6 +4,7 @@ import com.innowise.employeedatasystem.entity.Role;
 import com.innowise.employeedatasystem.entity.RoleEnum;
 import com.innowise.employeedatasystem.exception.RoleIsNotFoundException;
 import com.innowise.employeedatasystem.repo.RoleRepository;
+import com.innowise.employeedatasystem.util.EntityConstant;
 import com.innowise.employeedatasystem.util.GeneralConstant;
 import org.mapstruct.Mapper;
 import org.mapstruct.MappingConstants;
@@ -30,10 +31,10 @@ public abstract class RoleMapper {
         try {
             RoleEnum roleEnum = RoleEnum.valueOf(stringRole);
             return roleRepository.findByRole(roleEnum).orElseThrow(() -> new RoleIsNotFoundException(GeneralConstant.Message.ROLE_IS_NOT_FOUND_EXCEPTION_MESSAGE,
-                    Instant.now(), Map.of(GeneralConstant.Field.ROLE_FIELD, stringRole)));
+                    Instant.now(), Map.of(EntityConstant.Column.ROLE_FIELD, stringRole)));
         } catch (IllegalArgumentException exception) {
             throw new RoleIsNotFoundException(GeneralConstant.Message.ROLE_IS_NOT_FOUND_EXCEPTION_MESSAGE,
-                    Instant.now(), Map.of(GeneralConstant.Field.ROLE_FIELD, stringRole));
+                    Instant.now(), Map.of(EntityConstant.Column.ROLE_FIELD, stringRole));
         }
     }
 }
