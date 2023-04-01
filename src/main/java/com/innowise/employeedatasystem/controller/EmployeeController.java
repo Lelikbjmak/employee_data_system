@@ -4,7 +4,6 @@ import com.innowise.employeedatasystem.dto.*;
 import com.innowise.employeedatasystem.serviceimpl.EmployeeManagementServiceImpl;
 import com.innowise.employeedatasystem.util.ApiConstant;
 import com.innowise.employeedatasystem.util.EntityConstant;
-import com.innowise.employeedatasystem.util.GeneralConstant;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Min;
@@ -52,7 +51,7 @@ public class EmployeeController {
     @PutMapping(value = ApiConstant.ApiPath.EDIT_X)
     @ResponseStatus(HttpStatus.ACCEPTED)
     public UpdatedEmployeeDto editEmployee(
-            @PathVariable(name = GeneralConstant.Field.ID_FIELD)
+            @PathVariable(name = EntityConstant.Column.ID_FIELD)
             @Min(value = 0, message = EntityConstant.Validation.General.ID_MUST_GREATER_THAN_ZERO_CONSTRAINT_MESSAGE) Long id,
             @RequestBody EmployeeDto editEmployeeDto, HttpServletRequest request) {
         log.info("Request: {} is processing...", request.getRequestURI());
@@ -70,7 +69,7 @@ public class EmployeeController {
     @DeleteMapping(value = ApiConstant.ApiPath.DELETE_X)
     @ResponseStatus(HttpStatus.ACCEPTED)
     public DeletedEmployeeDto deleteEmployee(
-            @PathVariable(name = GeneralConstant.Field.ID_FIELD) Long id,
+            @PathVariable(name = EntityConstant.Column.ID_FIELD) Long id,
             HttpServletRequest request) {
         log.info("Request: {} is processing...", request.getRequestURI());
         return employeeManagementService.deleteEmployee(id);
@@ -86,7 +85,7 @@ public class EmployeeController {
     @GetMapping(value = ApiConstant.ApiPath.GET_X_BY_ID)
     @ResponseStatus(HttpStatus.OK)
     public EmployeeDto getEmployeeById(
-            @PathVariable(name = GeneralConstant.Field.ID_FIELD)
+            @PathVariable(name = EntityConstant.Column.ID_FIELD)
             @Min(value = 0, message = EntityConstant.Validation.General.ID_MUST_GREATER_THAN_ZERO_CONSTRAINT_MESSAGE) Long id,
             HttpServletRequest request) {
         log.info("Request: {} is processing...", request.getRequestURI());
@@ -95,7 +94,7 @@ public class EmployeeController {
 
     @GetMapping(value = ApiConstant.ApiPath.GET_X_BY_USERNAME)
     @ResponseStatus(HttpStatus.OK)
-    public EmployeeDto getEmployeeByUserUsername(@PathVariable(name = GeneralConstant.Field.USERNAME_FIELD) String username,
+    public EmployeeDto getEmployeeByUserUsername(@PathVariable(name = EntityConstant.Column.USERNAME_FIELD) String username,
                                                  HttpServletRequest request) {
         log.info("Request: {} is processing...", request.getRequestURI());
         return employeeManagementService.getEmployeeByUserUsername(username);

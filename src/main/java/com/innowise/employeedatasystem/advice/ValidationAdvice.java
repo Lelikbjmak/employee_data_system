@@ -31,8 +31,9 @@ public class ValidationAdvice {
     public ResponseEntity<ExceptionResponseDto> notValidDerivedData(
             MethodArgumentNotValidException exception, HttpServletRequest request) {
 
-        log.error("MethodArgumentNotValidException is thrown for: " + request.getRemoteAddr() +
-                "\nURI: " + request.getRequestURI());
+        log.error("Resolve exception: {} for URI {}. Message: \t{}",
+                exception.getClass().getName(), request.getRequestURI(), exception.getMessage());
+
         Map<String, Object> errors = extractConstraintsViolations(exception);
 
         HttpStatus status = HttpStatus.BAD_REQUEST;
@@ -46,8 +47,9 @@ public class ValidationAdvice {
     public ResponseEntity<ExceptionResponseDto> handleConstraintViolationException(
             ConstraintViolationException exception, HttpServletRequest request) {
 
-        log.error("ConstraintViolationException is thrown for: " + request.getRemoteAddr() +
-                "\nURI: " + request.getRequestURI());
+        log.error("Resolve exception: {} for URI {}. Message: \t{}",
+                exception.getClass().getName(), request.getRequestURI(), exception.getMessage());
+
         Map<String, Object> errors = extractConstraintsViolations(exception);
 
         HttpStatus status = HttpStatus.BAD_REQUEST;

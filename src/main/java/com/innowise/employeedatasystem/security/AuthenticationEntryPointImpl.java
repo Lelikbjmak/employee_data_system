@@ -6,8 +6,7 @@ import com.innowise.employeedatasystem.dto.AuthenticationFailedResponseDto;
 import com.innowise.employeedatasystem.entity.User;
 import com.innowise.employeedatasystem.exception.JwtAuthenticationException;
 import com.innowise.employeedatasystem.repo.UserRepository;
-import com.innowise.employeedatasystem.util.GeneralConstant;
-import jakarta.servlet.ServletException;
+import com.innowise.employeedatasystem.util.EntityConstant;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
@@ -33,16 +32,19 @@ public class AuthenticationEntryPointImpl implements AuthenticationEntryPoint {
     private final UserRepository userRepository;
 
     @Override
-    public void commence(HttpServletRequest request, HttpServletResponse response, AuthenticationException authException) throws IOException, ServletException {
+    public void commence(HttpServletRequest request, HttpServletResponse response, AuthenticationException authException) throws IOException {
 
         Map<String, Object> additional = new HashMap<>();
 
         if (authException instanceof JwtAuthenticationException exception) {
 
+            log.error("Failed to authenticate user: {}. Failed authentication status is: {}.\nStatus message: {}.",
+                    exception.getUsername(), exception.getStatus().name(), exception.getStatus().getStatusMessage());
+
             if (exception.getStatus().equals(AuthenticationErrorStatus.USERNAME)) {
 
-                additional.put(GeneralConstant.Field.USERNAME_FIELD, exception.getUsername());
-                additional.put(GeneralConstant.Field.PASSWORD_FIELD, exception.getPassword());
+                additional.put(EntityConstant.Column.USERNAME_FIELD, exception.getUsername());
+                additional.put(EntityConstant.Column.PASSWORD_FIELD, exception.getPassword());
 
             } else {
 

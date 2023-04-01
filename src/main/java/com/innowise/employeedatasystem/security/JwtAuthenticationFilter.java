@@ -1,7 +1,7 @@
 package com.innowise.employeedatasystem.security;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.innowise.employeedatasystem.dto.AuthenticationSuccessResponseDto;
+import com.innowise.employeedatasystem.dto.AuthenticationFailedResponseDto;
 import com.innowise.employeedatasystem.exception.InvalidTokenException;
 import com.innowise.employeedatasystem.service.JwtService;
 import com.innowise.employeedatasystem.util.GeneralConstant;
@@ -41,15 +41,16 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     protected void doFilterInternal(@NonNull HttpServletRequest request, @NonNull HttpServletResponse response,
                                     @NonNull FilterChain filterChain) throws ServletException, IOException {
 
+        log.info("JWT filter processing for {}...", request.getRemoteAddr());
         final String authenticationHeader = request.getHeader(HttpHeaders.AUTHORIZATION);
 
-        if (authenticationHeader == null || !authenticationHeader.startsWith(GeneralConstant.Feature.BEARER_TOKEN_HEADER)) {
-            log.info("Bearer token is null");
+        if (authenticationHeader == null || !authenticationHeader.startsWith(GeneralConstant.JwtFeature.BEARER_TOKEN_HEADER)) {
+            log.info("Bearer token is null for: {}", request.getRemoteAddr());
             filterChain.doFilter(request, response);
             return;
         }
 
-        String jwtToken = authenticationHeader.substring(GeneralConstant.Feature.BEARER_TOKEN_START_INDEX);
+        String jwtToken = authenticationHeader.substring(GeneralConstant.JwtFeature.BEARER_TOKEN_START_INDEX);
 
         try {
 
@@ -79,13 +80,13 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
             HttpStatus status = HttpStatus.UNAUTHORIZED;
 
-            log.info("Error jwtToken for IP: " + getClientIpAddress(request));
+            log.info("Error during authentication in JWT filter for IP: {} ", request.getRemoteAddr());
 
-            AuthenticationSuccessResponseDto authenticationResponse = AuthenticationSuccessResponseDto.builder()
+            AuthenticationFailedResponseDto authenticationResponse = AuthenticationFailedResponseDto.builder()
                     .timestamp(new Date())
                     .code(status.value())
                     .status(status.name())
-                    .token(jwtToken)
+                    .path(request.getRequestURI())
                     .message(exception.getMessage())
                     .build();
 
@@ -98,32 +99,5 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
         filterChain.doFilter(request, response);
 
-    }
-
-    private String getClientIpAddress(HttpServletRequest request) {
-
-        String ip = request.getHeader("X-Forwarded-For");
-
-        if (ip == null || ip.length() == 0 || "unknown".equalsIgnoreCase(ip)) {
-            ip = request.getHeader("Proxy-Client-IP");
-        }
-
-        if (ip == null || ip.length() == 0 || "unknown".equalsIgnoreCase(ip)) {
-            ip = request.getHeader("WL-Proxy-Client-IP");
-        }
-
-        if (ip == null || ip.length() == 0 || "unknown".equalsIgnoreCase(ip)) {
-            ip = request.getHeader("HTTP_CLIENT_IP");
-        }
-
-        if (ip == null || ip.length() == 0 || "unknown".equalsIgnoreCase(ip)) {
-            ip = request.getHeader("HTTP_X_FORWARDED_FOR");
-        }
-
-        if (ip == null || ip.length() == 0 || "unknown".equalsIgnoreCase(ip)) {
-            ip = request.getRemoteAddr();
-        }
-
-        return ip;
     }
 }

@@ -6,6 +6,7 @@ import com.innowise.employeedatasystem.util.GeneralConstant;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -16,6 +17,7 @@ import org.springframework.stereotype.Component;
 import java.io.IOException;
 import java.util.Date;
 
+@Slf4j
 @Component
 @RequiredArgsConstructor
 public class AccessDeniedHandlerImpl implements AccessDeniedHandler {
@@ -26,6 +28,7 @@ public class AccessDeniedHandlerImpl implements AccessDeniedHandler {
     public void handle(HttpServletRequest request, HttpServletResponse response,
                        AccessDeniedException accessDeniedException) throws IOException {
 
+        log.info("Access denied for ip: {}.\nPath: {}", request.getRemoteAddr(), request.getServletPath());
         HttpStatus status = HttpStatus.FORBIDDEN;
 
         AccessDeniedResponseDto accessDeniedResponseDto = AccessDeniedResponseDto.builder()

@@ -11,6 +11,7 @@ import com.innowise.employeedatasystem.service.JwtService;
 import com.innowise.employeedatasystem.service.UserService;
 import com.innowise.employeedatasystem.util.GeneralConstant;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -23,6 +24,7 @@ import org.springframework.stereotype.Service;
 import java.util.Date;
 
 @Service
+@Slf4j
 @RequiredArgsConstructor
 public class AuthenticationServiceImpl implements AuthenticationService {
 
@@ -40,49 +42,61 @@ public class AuthenticationServiceImpl implements AuthenticationService {
     @Override
     public AuthenticationSuccessResponseDto authenticateUser(AuthenticationRequestDto request) {
 
+        log.info("Trying to authenticate user: {}", request.username());
+
         try {
             authenticationManager.authenticate(
                     new UsernamePasswordAuthenticationToken(
-                            request.getUsername(),
-                            request.getPassword()
+                            request.username(),
+                            request.password()
                     )
             );
         } catch (AuthenticationException e) {
 
-            if (userRepository.findByUsername(request.getUsername()).isEmpty()) {
-                AuthenticationErrorStatus status = AuthenticationErrorStatus.USERNAME;
+            log.error("Error during authentication user {}. \nCause: {}", request.username(), e.getMessage());
 
-                throw new JwtAuthenticationException(status.getStatusMessage(), request.getUsername(), request.getPassword(), status);
+            if (userRepository.findByUsername(request.username()).isEmpty()) {
+                AuthenticationErrorStatus status = AuthenticationErrorStatus.USERNAME;
+                log.error("Error during authentication user. Username: {}, password {}.\n" + status.getStatusMessage(),
+                        request.username(), request.password());
+                throw new JwtAuthenticationException(status.getStatusMessage(), request.username(), request.password(), status);
             } else {
 
-                User user = userService.findByUsername(request.getUsername());
+                User user = userService.findByUsername(request.username());
                 AuthenticationErrorStatus status;
 
                 if (!user.isEnabled()) {
                     status = AuthenticationErrorStatus.ENABLED;
-
-                } else if (!user.isAccountNonExpired() | !user.isCredentialsNonExpired()) {
+                    log.error("Error during authentication user. Username: {}, password {}.\n" + status.getStatusMessage(),
+                            request.username(), request.password());
+                } else if (!user.isAccountNonExpired() || !user.isCredentialsNonExpired()) {
                     status = AuthenticationErrorStatus.EXPIRED;
-
-                } else if (!passwordEncoder.matches(request.getPassword(), user.getPassword())) {
+                    log.error("Error during authentication user. Username: {}, password {}.\n" + status.getStatusMessage(),
+                            request.username(), request.password());
+                } else if (!passwordEncoder.matches(request.password(), user.getPassword())) {
                     status = AuthenticationErrorStatus.PASSWORD;
-
+                    log.error("Error during authentication user. Username: {}, password {}.\n" + status.getStatusMessage(),
+                            request.username(), request.password());
                 } else if (!user.isAccountNonLocked()) {
                     status = AuthenticationErrorStatus.LOCKED;
-
+                    log.error("Error during authentication user. Username: {}, password {}.\n" + status.getStatusMessage(),
+                            request.username(), request.password());
                 } else {
                     status = AuthenticationErrorStatus.ERROR_STATUS;
+                    log.error("Error during authentication user. Username: {}, password {}.\n" + status.getStatusMessage(),
+                            request.username(), request.password());
                 }
 
-                throw new JwtAuthenticationException(status.getStatusMessage(), request.getUsername(), request.getPassword(), status);
-
+                throw new JwtAuthenticationException(status.getStatusMessage(), request.username(), request.password(), status);
             }
         }
 
         HttpStatus status = HttpStatus.ACCEPTED;
 
-        UserDetails userDetails = userDetailsService.loadUserByUsername(request.getUsername());
+        UserDetails userDetails = userDetailsService.loadUserByUsername(request.username());
         String token = jwtService.generateToken(userDetails);
+
+        log.info("Successfully authenticate User {}", request.username());
 
         return AuthenticationSuccessResponseDto.builder()
                 .code(status.value())
