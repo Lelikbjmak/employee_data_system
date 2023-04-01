@@ -41,7 +41,7 @@ public abstract class JwtService {
     }
 
     protected static Key getSignInKey() {
-        byte[] keyBytes = Decoders.BASE64.decode(GeneralConstant.Feature.JWT_TOKEN_SECRET_KEY);
+        byte[] keyBytes = Decoders.BASE64.decode(GeneralConstant.JwtFeature.JWT_TOKEN_SECRET_KEY);
         return Keys.hmacShaKeyFor(keyBytes);
     }
 
