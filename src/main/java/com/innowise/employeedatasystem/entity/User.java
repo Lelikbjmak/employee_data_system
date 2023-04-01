@@ -17,29 +17,25 @@ import java.util.Set;
 public class User {
 
     @Id
-    @Getter
     private Long id;
 
-    @Column(unique = true)
+    @Column(unique = true, length = 30)
     private String username;
 
     private String password;
 
-    @Getter
-    @Column(unique = true)
+    @Column(unique = true, length = 50)
     private String mail;
 
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(name = EntityConstant.Table.TABLE_USERS_ROLES,
-            joinColumns = @JoinColumn(name = EntityConstant.Column.USER_ID, referencedColumnName = EntityConstant.Column.ID),
-            inverseJoinColumns = @JoinColumn(name = EntityConstant.Column.ROLE_ID, referencedColumnName = EntityConstant.Column.ID))
-    @Getter
+            joinColumns = @JoinColumn(name = EntityConstant.Column.USER_ID, referencedColumnName = EntityConstant.Column.ID_FIELD),
+            inverseJoinColumns = @JoinColumn(name = EntityConstant.Column.ROLE_ID, referencedColumnName = EntityConstant.Column.ID_FIELD))
     private Set<Role> roles;
 
-    @Getter
     @MapsId
     @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = EntityConstant.Column.ID)
+    @JoinColumn(name = EntityConstant.Column.ID_FIELD)
     private Employee employee;
 
     private boolean accountNonExpired;
