@@ -3,8 +3,10 @@ package com.innowise.employeedatasystem.service;
 import com.innowise.employeedatasystem.dto.*;
 import com.innowise.employeedatasystem.entity.Employee;
 import com.innowise.employeedatasystem.entity.User;
+import com.innowise.employeedatasystem.mapper.EmployeeListMapper;
 import com.innowise.employeedatasystem.mapper.EmployeeMapper;
 import com.innowise.employeedatasystem.mapper.UserMapper;
+import com.innowise.employeedatasystem.provider.RegistrationResponseProvider;
 import com.innowise.employeedatasystem.serviceimpl.EmployeeManagementServiceImpl;
 import com.innowise.employeedatasystem.serviceimpl.EmployeeServiceImpl;
 import com.innowise.employeedatasystem.serviceimpl.UserServiceImpl;
@@ -24,6 +26,7 @@ import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
+//TODO: Fix tests according to EmployeeListMapper + ResponseProvider
 class EmployeeManagementServiceTest {
 
     @Mock
@@ -37,6 +40,12 @@ class EmployeeManagementServiceTest {
 
     @Mock
     private EmployeeMapper employeeMapper;
+
+    @Mock
+    private EmployeeListMapper employeeListMapper;
+
+    @Mock
+    private RegistrationResponseProvider responseProvider;
 
     @InjectMocks
     private EmployeeManagementServiceImpl employeeManagementService;
@@ -75,10 +84,10 @@ class EmployeeManagementServiceTest {
 
         RegistrationResponseDto actualResponse = employeeManagementService.registerEmployeeList(registrationDtoList);
 
-        assertEquals(HttpStatus.CREATED.value(), actualResponse.getCode());
-        assertEquals(HttpStatus.CREATED.name(), actualResponse.getStatus());
-        assertEquals(GeneralConstant.Message.EMPLOYEE_SUCCESSFULLY_ADDED_MESSAGE, actualResponse.getMessage());
-        assertEquals(registrationDtoList.size(), actualResponse.getContent().size());
+        assertEquals(HttpStatus.CREATED.value(), actualResponse.code());
+        assertEquals(HttpStatus.CREATED.name(), actualResponse.status());
+        assertEquals(GeneralConstant.Message.EMPLOYEE_SUCCESSFULLY_ADDED_MESSAGE, actualResponse.message());
+        assertEquals(registrationDtoList.size(), actualResponse.additional().size());
 
         verify(userService, times(1)).registerUser(mockUser);
         verify(employeeService, times(1)).saveEmployee(mockEmployee);
@@ -105,10 +114,10 @@ class EmployeeManagementServiceTest {
 
         RegistrationResponseDto actualResponse = employeeManagementService.registerEmployee(mockRegistrationDto);
 
-        assertEquals(HttpStatus.CREATED.value(), actualResponse.getCode());
-        assertEquals(HttpStatus.CREATED.name(), actualResponse.getStatus());
-        assertEquals(GeneralConstant.Message.EMPLOYEE_SUCCESSFULLY_ADDED_MESSAGE, actualResponse.getMessage());
-        assertEquals(List.of(mockRegistrationDto).size(), actualResponse.getContent().size());
+        assertEquals(HttpStatus.CREATED.value(), actualResponse.code());
+        assertEquals(HttpStatus.CREATED.name(), actualResponse.status());
+        assertEquals(GeneralConstant.Message.EMPLOYEE_SUCCESSFULLY_ADDED_MESSAGE, actualResponse.message());
+        assertEquals(List.of(mockRegistrationDto).size(), actualResponse.additional().size());
 
         verify(userService, times(1)).registerUser(mockUser);
         verify(employeeService, times(1)).saveEmployee(mockEmployee);
@@ -156,8 +165,8 @@ class EmployeeManagementServiceTest {
         }
 
         for (int i = 0; i < expectedEmployeeDtoList.size(); i++) {
-            assertEquals(expectedEmployeeDtoList.get(i).getId(),
-                    actualEmployeeDtoList.get(i).getId());
+            assertEquals(expectedEmployeeDtoList.get(i).id(),
+                    actualEmployeeDtoList.get(i).id());
         }
     }
 
@@ -193,6 +202,6 @@ class EmployeeManagementServiceTest {
         when(employeeMapper.mapToUpdatedEmployeeDto(expectedUpdatedEmployee)).thenReturn(updatedEmployeeDto);
 
         UpdatedEmployeeDto editedEmployee = employeeManagementService.editEmployee(employeeId, employeeDto);
-        Assertions.assertEquals(expectedUpdatedEmployee.getFirstName(), editedEmployee.getFirstName());
+        Assertions.assertEquals(expectedUpdatedEmployee.getFirstName(), editedEmployee.firstName());
     }
 }

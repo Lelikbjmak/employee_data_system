@@ -43,8 +43,8 @@ class EmployeeListMapperTest {
         );
 
         List<EmployeeDto> actualEmployeeDtoList = employeeListMapper.mapToDto(employeeList);
-        Assertions.assertEquals(expectedEmployeeDto.get(0).getFirstName(),
-                actualEmployeeDtoList.get(0).getFirstName());
+        Assertions.assertEquals(expectedEmployeeDto.get(0).firstName(),
+                actualEmployeeDtoList.get(0).firstName());
     }
 
     @Test
@@ -66,8 +66,8 @@ class EmployeeListMapperTest {
         );
 
         List<DeletedEmployeeDto> actualDeletedEmployeeDtoList = employeeListMapper.mapToDeletedDtoList(employeeList);
-        Assertions.assertEquals(expectedDeletedEmployeeDtoList.get(0).getFirstName(),
-                actualDeletedEmployeeDtoList.get(0).getFirstName());
+        Assertions.assertEquals(expectedDeletedEmployeeDtoList.get(0).firstName(),
+                actualDeletedEmployeeDtoList.get(0).firstName());
         Assertions.assertTrue(actualDeletedEmployeeDtoList.get(0).isDeleted());
     }
 
@@ -90,8 +90,8 @@ class EmployeeListMapperTest {
         );
 
         List<UpdatedEmployeeDto> actualUpdatedEmployeeDtoList = employeeListMapper.mapToUpdatedDtoList(employeeList);
-        Assertions.assertEquals(expectedUpdatedEmployeeDtoList.get(0).getFirstName(),
-                actualUpdatedEmployeeDtoList.get(0).getFirstName());
+        Assertions.assertEquals(expectedUpdatedEmployeeDtoList.get(0).firstName(),
+                actualUpdatedEmployeeDtoList.get(0).firstName());
         Assertions.assertTrue(actualUpdatedEmployeeDtoList.get(0).isUpdated());
     }
 

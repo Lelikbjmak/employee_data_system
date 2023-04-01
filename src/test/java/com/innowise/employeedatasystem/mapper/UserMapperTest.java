@@ -62,10 +62,10 @@ class UserMapperTest {
 
         UserDto userDto = userMapper.mapToDto(user);
 
-        Assertions.assertEquals(username, userDto.getUsername());
+        Assertions.assertEquals(username, userDto.username());
         Assertions.assertEquals(roleSet.stream()
                 .map(role -> role.getRole().name())
-                .collect(Collectors.toSet()), userDto.getRoles());
+                .collect(Collectors.toSet()), userDto.roles());
     }
 
     @Test

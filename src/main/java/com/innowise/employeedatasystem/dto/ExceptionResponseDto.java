@@ -1,28 +1,20 @@
 package com.innowise.employeedatasystem.dto;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
-import lombok.AllArgsConstructor;
+import com.innowise.employeedatasystem.util.DtoConstant;
 import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
 
 import java.time.Instant;
 import java.util.Map;
 
-@Getter
 @Builder
-@NoArgsConstructor
-@AllArgsConstructor
-@JsonPropertyOrder({"timestamp", "status", "code", "message", "additional"})
-public class ExceptionResponseDto {
-
-    private Instant timestamp;
-
-    private int code;
-
-    private String status;
-
-    private String message;
-
-    private Map<String, Object> additional;
+@JsonInclude(value = JsonInclude.Include.NON_NULL)
+@JsonPropertyOrder({DtoConstant.Json.TIMESTAMP_FIELD_NAME,
+        DtoConstant.Json.STATUS_FIELD_NAME,
+        DtoConstant.Json.CODE_FIELD_NAME,
+        DtoConstant.Json.MESSAGE_FIELD_NAME,
+        DtoConstant.Json.ADDITIONAL_CONTENT_FIELD_NAME})
+public record ExceptionResponseDto(
+        Instant timestamp, int code, String status, String message, Map<String, Object> additional) {
 }

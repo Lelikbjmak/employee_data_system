@@ -2,9 +2,8 @@ package com.innowise.employeedatasystem.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.innowise.employeedatasystem.EmployeeDataSystemApplication;
-import com.innowise.employeedatasystem.dto.EmployeeDto;
-import com.innowise.employeedatasystem.dto.ExceptionResponseDto;
-import com.innowise.employeedatasystem.dto.RegistrationDto;
+import com.innowise.employeedatasystem.dto.*;
+import com.innowise.employeedatasystem.entity.RoleEnum;
 import com.innowise.employeedatasystem.util.Constant;
 import com.innowise.employeedatasystem.util.GeneralConstant;
 import org.junit.jupiter.api.Assertions;
@@ -24,7 +23,9 @@ import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
 
+import java.util.Date;
 import java.util.List;
+import java.util.Set;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
@@ -61,7 +62,7 @@ class AuthorizationEndpointsTest {
     @WithMockUser(authorities = {"ROLE_USER"})
     void failedDeleteEmployeeNotCompliantAuthorities(@Value(value = "${employee.id}") Long id) throws Exception {
 
-        String responseString = mockMvc.perform(delete(Constant.ApiRoutes.DELETE_X + "/" + id)
+        String responseString = mockMvc.perform(delete(Constant.ApiRoutes.DELETE_X, id)
                         .contentType(MediaType.APPLICATION_JSON_VALUE)
                         .accept(MediaType.APPLICATION_JSON_VALUE))
                 .andDo(print())
@@ -70,8 +71,8 @@ class AuthorizationEndpointsTest {
 
         ExceptionResponseDto failedResponseDto = objectMapper.readValue(responseString, ExceptionResponseDto.class);
         Assertions.assertNotNull(failedResponseDto, "Response can't be deserialized to ExceptionResponseDto.class.");
-        Assertions.assertEquals(HttpStatus.FORBIDDEN.value(), failedResponseDto.getCode());
-        Assertions.assertEquals(GeneralConstant.Message.ACCESS_DENIED_EXCEPTION_MESSAGE, failedResponseDto.getMessage());
+        Assertions.assertEquals(HttpStatus.FORBIDDEN.value(), failedResponseDto.code());
+        Assertions.assertEquals(GeneralConstant.Message.ACCESS_DENIED_EXCEPTION_MESSAGE, failedResponseDto.message());
     }
 
     @Test
@@ -89,8 +90,8 @@ class AuthorizationEndpointsTest {
 
         ExceptionResponseDto failedResponseDto = objectMapper.readValue(responseString, ExceptionResponseDto.class);
         Assertions.assertNotNull(failedResponseDto, "Response can't be deserialized to ExceptionResponseDto.class.");
-        Assertions.assertEquals(HttpStatus.FORBIDDEN.value(), failedResponseDto.getCode());
-        Assertions.assertEquals(GeneralConstant.Message.ACCESS_DENIED_EXCEPTION_MESSAGE, failedResponseDto.getMessage());
+        Assertions.assertEquals(HttpStatus.FORBIDDEN.value(), failedResponseDto.code());
+        Assertions.assertEquals(GeneralConstant.Message.ACCESS_DENIED_EXCEPTION_MESSAGE, failedResponseDto.message());
     }
 
     @Test
@@ -98,9 +99,9 @@ class AuthorizationEndpointsTest {
     @WithMockUser(authorities = {"ROLE_USER"})
     void failedEditEmployeeNotCompliantAuthorities(@Value(value = "${employee.id}") Long id) throws Exception {
 
-        String responseString = mockMvc.perform(put(Constant.ApiRoutes.EDIT_X + "/" + id)
+        String responseString = mockMvc.perform(put(Constant.ApiRoutes.EDIT_X, id)
                         .contentType(MediaType.APPLICATION_JSON_VALUE)
-                        .content(objectMapper.writeValueAsString(new EmployeeDto()))
+                        .content(objectMapper.writeValueAsString(EmployeeDto.builder().build()))
                         .accept(MediaType.APPLICATION_JSON_VALUE))
                 .andDo(print())
                 .andExpect(status().isForbidden())
@@ -108,8 +109,8 @@ class AuthorizationEndpointsTest {
 
         ExceptionResponseDto failedResponseDto = objectMapper.readValue(responseString, ExceptionResponseDto.class);
         Assertions.assertNotNull(failedResponseDto, "Response can't be deserialized to ExceptionResponseDto.class.");
-        Assertions.assertEquals(HttpStatus.FORBIDDEN.value(), failedResponseDto.getCode());
-        Assertions.assertEquals(GeneralConstant.Message.ACCESS_DENIED_EXCEPTION_MESSAGE, failedResponseDto.getMessage());
+        Assertions.assertEquals(HttpStatus.FORBIDDEN.value(), failedResponseDto.code());
+        Assertions.assertEquals(GeneralConstant.Message.ACCESS_DENIED_EXCEPTION_MESSAGE, failedResponseDto.message());
     }
 
     @Test
@@ -127,8 +128,8 @@ class AuthorizationEndpointsTest {
 
         ExceptionResponseDto failedResponseDto = objectMapper.readValue(responseString, ExceptionResponseDto.class);
         Assertions.assertNotNull(failedResponseDto, "Response can't be deserialized to ExceptionResponseDto.class.");
-        Assertions.assertEquals(HttpStatus.FORBIDDEN.value(), failedResponseDto.getCode());
-        Assertions.assertEquals(GeneralConstant.Message.ACCESS_DENIED_EXCEPTION_MESSAGE, failedResponseDto.getMessage());
+        Assertions.assertEquals(HttpStatus.FORBIDDEN.value(), failedResponseDto.code());
+        Assertions.assertEquals(GeneralConstant.Message.ACCESS_DENIED_EXCEPTION_MESSAGE, failedResponseDto.message());
     }
 
     @Test
@@ -136,9 +137,24 @@ class AuthorizationEndpointsTest {
     @WithMockUser(authorities = {"ROLE_USER"})
     void failedAddEmployeeNotCompliantAuthorities() throws Exception {
 
+        RegistrationDto registrationDto = RegistrationDto.builder()
+                .userDto(RegistrationUserDto.builder()
+                        .username("username")
+                        .password("password1A")
+                        .mail("mail@gmail.com")
+                        .roles(Set.of(RoleEnum.ROLE_USER.name()))
+                        .build())
+                .employeeDto(RegistrationEmployeeDto.builder()
+                        .firstName("firstName")
+                        .lastName("lastName")
+                        .middleName("middleName")
+                        .hireDate(new Date())
+                        .build())
+                .build();
+
         String responseString = mockMvc.perform(post(Constant.ApiRoutes.ADD_X)
                         .contentType(MediaType.APPLICATION_JSON_VALUE)
-                        .content(objectMapper.writeValueAsString(new RegistrationDto()))
+                        .content(objectMapper.writeValueAsString(registrationDto))
                         .accept(MediaType.APPLICATION_JSON_VALUE))
                 .andDo(print())
                 .andExpect(status().isForbidden())
@@ -146,8 +162,8 @@ class AuthorizationEndpointsTest {
 
         ExceptionResponseDto failedResponseDto = objectMapper.readValue(responseString, ExceptionResponseDto.class);
         Assertions.assertNotNull(failedResponseDto, "Response can't be deserialized to ExceptionResponseDto.class.");
-        Assertions.assertEquals(HttpStatus.FORBIDDEN.value(), failedResponseDto.getCode());
-        Assertions.assertEquals(GeneralConstant.Message.ACCESS_DENIED_EXCEPTION_MESSAGE, failedResponseDto.getMessage());
+        Assertions.assertEquals(HttpStatus.FORBIDDEN.value(), failedResponseDto.code());
+        Assertions.assertEquals(GeneralConstant.Message.ACCESS_DENIED_EXCEPTION_MESSAGE, failedResponseDto.message());
     }
 
     @Test
@@ -165,7 +181,7 @@ class AuthorizationEndpointsTest {
 
         ExceptionResponseDto failedResponseDto = objectMapper.readValue(responseString, ExceptionResponseDto.class);
         Assertions.assertNotNull(failedResponseDto, "Response can't be deserialized to ExceptionResponseDto.class.");
-        Assertions.assertEquals(HttpStatus.FORBIDDEN.value(), failedResponseDto.getCode());
-        Assertions.assertEquals(GeneralConstant.Message.ACCESS_DENIED_EXCEPTION_MESSAGE, failedResponseDto.getMessage());
+        Assertions.assertEquals(HttpStatus.FORBIDDEN.value(), failedResponseDto.code());
+        Assertions.assertEquals(GeneralConstant.Message.ACCESS_DENIED_EXCEPTION_MESSAGE, failedResponseDto.message());
     }
 }

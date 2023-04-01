@@ -72,8 +72,8 @@ class AuthenticationControllerTest {
 
         AuthenticationSuccessResponseDto successResponseDto = objectMapper.readValue(responseString, AuthenticationSuccessResponseDto.class);
         Assertions.assertNotNull(successResponseDto, "Response can't be deserialized to AuthenticationSuccessResponseDto.class.");
-        Assertions.assertEquals(successResponseDto.getCode(), HttpStatus.ACCEPTED.value());
-        Assertions.assertNotNull(successResponseDto.getToken(), "JWT auth token is not present.");
+        Assertions.assertEquals(successResponseDto.code(), HttpStatus.ACCEPTED.value());
+        Assertions.assertNotNull(successResponseDto.token(), "JWT auth token is not present.");
 
     }
 
@@ -94,8 +94,8 @@ class AuthenticationControllerTest {
 
         AuthenticationFailedResponseDto failedResponseDto = objectMapper.readValue(responseString, AuthenticationFailedResponseDto.class);
         Assertions.assertNotNull(failedResponseDto, "Response can't be deserialized to AuthenticationFailedResponseDto.class.");
-        Assertions.assertEquals(failedResponseDto.getCode(), HttpStatus.UNAUTHORIZED.value());
-        Assertions.assertEquals(GeneralConstant.Message.USERNAME_NOT_FOUND_EXCEPTION_MESSAGE, failedResponseDto.getMessage());
+        Assertions.assertEquals(failedResponseDto.code(), HttpStatus.UNAUTHORIZED.value());
+        Assertions.assertEquals(GeneralConstant.Message.USERNAME_NOT_FOUND_EXCEPTION_MESSAGE, failedResponseDto.message());
     }
 
     @Test
@@ -118,8 +118,8 @@ class AuthenticationControllerTest {
 
         AuthenticationFailedResponseDto failedResponseDto = objectMapper.readValue(responseString, AuthenticationFailedResponseDto.class);
         Assertions.assertNotNull(failedResponseDto, "Response can't be deserialized to AuthenticationFailedResponseDto.class.");
-        Assertions.assertEquals(failedResponseDto.getCode(), HttpStatus.UNAUTHORIZED.value());
-        Assertions.assertEquals(GeneralConstant.Message.AUTHENTICATION_ERROR_ACCOUNT_DISABLED_MESSAGE, failedResponseDto.getMessage());
+        Assertions.assertEquals(failedResponseDto.code(), HttpStatus.UNAUTHORIZED.value());
+        Assertions.assertEquals(GeneralConstant.Message.AUTHENTICATION_ERROR_ACCOUNT_DISABLED_MESSAGE, failedResponseDto.message());
     }
 
     @Test
@@ -142,8 +142,8 @@ class AuthenticationControllerTest {
 
         AuthenticationFailedResponseDto failedResponseDto = objectMapper.readValue(responseString, AuthenticationFailedResponseDto.class);
         Assertions.assertNotNull(failedResponseDto, "Response can't be deserialized to AuthenticationFailedResponseDto.class.");
-        Assertions.assertEquals(failedResponseDto.getCode(), HttpStatus.UNAUTHORIZED.value());
-        Assertions.assertEquals(GeneralConstant.Message.AUTHENTICATION_ERROR_ACCOUNT_OR_CREDENTIALS_EXPIRED_MESSAGE, failedResponseDto.getMessage());
+        Assertions.assertEquals(failedResponseDto.code(), HttpStatus.UNAUTHORIZED.value());
+        Assertions.assertEquals(GeneralConstant.Message.AUTHENTICATION_ERROR_ACCOUNT_OR_CREDENTIALS_EXPIRED_MESSAGE, failedResponseDto.message());
     }
 
     @Test
@@ -166,8 +166,8 @@ class AuthenticationControllerTest {
 
         AuthenticationFailedResponseDto failedResponseDto = objectMapper.readValue(responseString, AuthenticationFailedResponseDto.class);
         Assertions.assertNotNull(failedResponseDto, "Response can't be deserialized to AuthenticationFailedResponseDto.class.");
-        Assertions.assertEquals(failedResponseDto.getCode(), HttpStatus.UNAUTHORIZED.value());
-        Assertions.assertEquals(GeneralConstant.Message.AUTHENTICATION_ERROR_ACCOUNT_LOCKED_MESSAGE, failedResponseDto.getMessage());
+        Assertions.assertEquals(failedResponseDto.code(), HttpStatus.UNAUTHORIZED.value());
+        Assertions.assertEquals(GeneralConstant.Message.AUTHENTICATION_ERROR_ACCOUNT_LOCKED_MESSAGE, failedResponseDto.message());
     }
 
     @Test

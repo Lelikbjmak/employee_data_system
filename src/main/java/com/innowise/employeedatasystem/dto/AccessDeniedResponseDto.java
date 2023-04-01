@@ -1,27 +1,17 @@
 package com.innowise.employeedatasystem.dto;
 
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
-import lombok.AllArgsConstructor;
+import com.innowise.employeedatasystem.util.DtoConstant;
 import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
 
 import java.util.Date;
 
-@Getter
 @Builder
-@NoArgsConstructor
-@AllArgsConstructor
-@JsonPropertyOrder({ "timestamp", "status", "code", "message", "path"})
-public class AccessDeniedResponseDto {
-
-    private Date timestamp;
-
-    private int code;
-
-    private String status;
-
-    private String message;
-
-    private String path;
+@JsonPropertyOrder({
+        DtoConstant.Json.TIMESTAMP_FIELD_NAME,
+        DtoConstant.Json.STATUS_FIELD_NAME,
+        DtoConstant.Json.CODE_FIELD_NAME,
+        DtoConstant.Json.MESSAGE_FIELD_NAME,
+        DtoConstant.Json.PATH_FIELD_NAME})
+public record AccessDeniedResponseDto(Date timestamp, int code, String status, String message, String path) {
 }
