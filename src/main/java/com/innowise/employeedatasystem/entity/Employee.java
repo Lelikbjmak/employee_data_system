@@ -19,16 +19,18 @@ public class Employee {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Column(length = 40)
     private String firstName;
 
+    @Column(length = 40)
     private String middleName;
 
+    @Column(length = 40)
     private String lastName;
 
     @Temporal(TemporalType.DATE)
     private Date hireDate;
 
-    @Getter
     @OneToOne(mappedBy = EntityConstant.Column.EMPLOYEE, cascade = {CascadeType.REFRESH, CascadeType.REMOVE},
             fetch = FetchType.LAZY)
     private User user;
