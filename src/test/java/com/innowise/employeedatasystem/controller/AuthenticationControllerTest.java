@@ -5,7 +5,7 @@ import com.innowise.employeedatasystem.EmployeeDataSystemApplication;
 import com.innowise.employeedatasystem.dto.AuthenticationFailedResponseDto;
 import com.innowise.employeedatasystem.dto.AuthenticationRequestDto;
 import com.innowise.employeedatasystem.dto.AuthenticationSuccessResponseDto;
-import com.innowise.employeedatasystem.util.Constant;
+import com.innowise.employeedatasystem.util.TestConstant;
 import com.innowise.employeedatasystem.util.EntityConstant;
 import com.innowise.employeedatasystem.util.GeneralConstant;
 import org.junit.jupiter.api.*;
@@ -62,7 +62,7 @@ class AuthenticationControllerTest {
 
         AuthenticationRequestDto authenticationRequestDto = new AuthenticationRequestDto(username, password);
 
-        String responseString = mockMvc.perform(post(Constant.ApiRoutes.AUTH_ROUTE)
+        String responseString = mockMvc.perform(post(TestConstant.ApiRoutes.AUTH_ROUTE)
                         .contentType(MediaType.APPLICATION_JSON_VALUE)
                         .content(objectMapper.writeValueAsString(authenticationRequestDto))
                         .accept(MediaType.APPLICATION_JSON_VALUE))
@@ -84,7 +84,7 @@ class AuthenticationControllerTest {
 
         AuthenticationRequestDto authenticationRequestDto = new AuthenticationRequestDto("failedUsername", "wrongPassword");
 
-        String responseString = mockMvc.perform(post(Constant.ApiRoutes.AUTH_ROUTE)
+        String responseString = mockMvc.perform(post(TestConstant.ApiRoutes.AUTH_ROUTE)
                         .contentType(MediaType.APPLICATION_JSON_VALUE)
                         .content(objectMapper.writeValueAsString(authenticationRequestDto))
                         .accept(MediaType.APPLICATION_JSON_VALUE))
@@ -108,7 +108,7 @@ class AuthenticationControllerTest {
 
         AuthenticationRequestDto authenticationRequestDto = new AuthenticationRequestDto(username, password);
 
-        String responseString = mockMvc.perform(post(Constant.ApiRoutes.AUTH_ROUTE)
+        String responseString = mockMvc.perform(post(TestConstant.ApiRoutes.AUTH_ROUTE)
                         .contentType(MediaType.APPLICATION_JSON_VALUE)
                         .content(objectMapper.writeValueAsString(authenticationRequestDto))
                         .accept(MediaType.APPLICATION_JSON_VALUE))
@@ -132,7 +132,7 @@ class AuthenticationControllerTest {
 
         AuthenticationRequestDto authenticationRequestDto = new AuthenticationRequestDto(username, password);
 
-        String responseString = mockMvc.perform(post(Constant.ApiRoutes.AUTH_ROUTE)
+        String responseString = mockMvc.perform(post(TestConstant.ApiRoutes.AUTH_ROUTE)
                         .contentType(MediaType.APPLICATION_JSON_VALUE)
                         .content(objectMapper.writeValueAsString(authenticationRequestDto))
                         .accept(MediaType.APPLICATION_JSON_VALUE))
@@ -156,7 +156,7 @@ class AuthenticationControllerTest {
 
         AuthenticationRequestDto authenticationRequestDto = new AuthenticationRequestDto(username, password);
 
-        String responseString = mockMvc.perform(post(Constant.ApiRoutes.AUTH_ROUTE)
+        String responseString = mockMvc.perform(post(TestConstant.ApiRoutes.AUTH_ROUTE)
                         .contentType(MediaType.APPLICATION_JSON_VALUE)
                         .content(objectMapper.writeValueAsString(authenticationRequestDto))
                         .accept(MediaType.APPLICATION_JSON_VALUE))
@@ -179,7 +179,7 @@ class AuthenticationControllerTest {
 
         AuthenticationRequestDto authenticationRequestDto = new AuthenticationRequestDto(null, null);
 
-        String responseString = mockMvc.perform(post(Constant.ApiRoutes.AUTH_ROUTE)
+        String responseString = mockMvc.perform(post(TestConstant.ApiRoutes.AUTH_ROUTE)
                         .contentType(MediaType.APPLICATION_JSON_VALUE)
                         .content(objectMapper.writeValueAsString(authenticationRequestDto))
                         .accept(MediaType.APPLICATION_JSON_VALUE))

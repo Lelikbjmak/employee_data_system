@@ -4,7 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.innowise.employeedatasystem.EmployeeDataSystemApplication;
 import com.innowise.employeedatasystem.dto.*;
 import com.innowise.employeedatasystem.entity.RoleEnum;
-import com.innowise.employeedatasystem.util.Constant;
+import com.innowise.employeedatasystem.util.TestConstant;
 import com.innowise.employeedatasystem.util.GeneralConstant;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
@@ -62,7 +62,7 @@ class AuthorizationEndpointsTest {
     @WithMockUser(authorities = {"ROLE_USER"})
     void failedDeleteEmployeeNotCompliantAuthorities(@Value(value = "${employee.id}") Long id) throws Exception {
 
-        String responseString = mockMvc.perform(delete(Constant.ApiRoutes.DELETE_X, id)
+        String responseString = mockMvc.perform(delete(TestConstant.ApiRoutes.DELETE_X, id)
                         .contentType(MediaType.APPLICATION_JSON_VALUE)
                         .accept(MediaType.APPLICATION_JSON_VALUE))
                 .andDo(print())
@@ -80,7 +80,7 @@ class AuthorizationEndpointsTest {
     @WithMockUser(authorities = {"ROLE_USER"})
     void failedDeleteEmployeeListNotCompliantAuthorities() throws Exception {
 
-        String responseString = mockMvc.perform(delete(Constant.ApiRoutes.DELETE_ALL_X)
+        String responseString = mockMvc.perform(delete(TestConstant.ApiRoutes.DELETE_ALL_X)
                         .contentType(MediaType.APPLICATION_JSON_VALUE)
                         .accept(MediaType.APPLICATION_JSON_VALUE)
                         .content(objectMapper.writeValueAsString(List.of())))
@@ -99,7 +99,7 @@ class AuthorizationEndpointsTest {
     @WithMockUser(authorities = {"ROLE_USER"})
     void failedEditEmployeeNotCompliantAuthorities(@Value(value = "${employee.id}") Long id) throws Exception {
 
-        String responseString = mockMvc.perform(put(Constant.ApiRoutes.EDIT_X, id)
+        String responseString = mockMvc.perform(put(TestConstant.ApiRoutes.EDIT_X, id)
                         .contentType(MediaType.APPLICATION_JSON_VALUE)
                         .content(objectMapper.writeValueAsString(EmployeeDto.builder().build()))
                         .accept(MediaType.APPLICATION_JSON_VALUE))
@@ -118,7 +118,7 @@ class AuthorizationEndpointsTest {
     @WithMockUser(authorities = {"ROLE_USER"})
     void failedEditEmployeeListNotCompliantAuthorities() throws Exception {
 
-        String responseString = mockMvc.perform(put(Constant.ApiRoutes.EDIT_ALL_X)
+        String responseString = mockMvc.perform(put(TestConstant.ApiRoutes.EDIT_ALL_X)
                         .contentType(MediaType.APPLICATION_JSON_VALUE)
                         .content(objectMapper.writeValueAsString(List.of()))
                         .accept(MediaType.APPLICATION_JSON_VALUE))
@@ -152,7 +152,7 @@ class AuthorizationEndpointsTest {
                         .build())
                 .build();
 
-        String responseString = mockMvc.perform(post(Constant.ApiRoutes.ADD_X)
+        String responseString = mockMvc.perform(post(TestConstant.ApiRoutes.ADD_X)
                         .contentType(MediaType.APPLICATION_JSON_VALUE)
                         .content(objectMapper.writeValueAsString(registrationDto))
                         .accept(MediaType.APPLICATION_JSON_VALUE))
@@ -171,7 +171,7 @@ class AuthorizationEndpointsTest {
     @WithMockUser(authorities = {"ROLE_USER"})
     void failedAddEmployeeListNotCompliantAuthorities() throws Exception {
 
-        String responseString = mockMvc.perform(post(Constant.ApiRoutes.ADD_ALL_X)
+        String responseString = mockMvc.perform(post(TestConstant.ApiRoutes.ADD_ALL_X)
                         .contentType(MediaType.APPLICATION_JSON_VALUE)
                         .content(objectMapper.writeValueAsString(List.of()))
                         .accept(MediaType.APPLICATION_JSON_VALUE))
