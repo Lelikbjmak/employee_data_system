@@ -18,6 +18,7 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.http.HttpStatus;
 
+import java.util.Date;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -81,13 +82,19 @@ class EmployeeManagementServiceTest {
         when(employeeMapper.mapToEntity(any(RegistrationEmployeeDto.class))).thenReturn(mockEmployee);
         when(employeeService.saveEmployee(any(Employee.class))).thenReturn(mockEmployee);
         when(employeeMapper.mapToDto(any(Employee.class))).thenReturn(mockEmployeeDto);
+        when(responseProvider.generateRegistrationResponse(anyList())).thenReturn(RegistrationResponseDto.builder()
+                .timestamp(new Date())
+                .status(HttpStatus.CREATED.name())
+                .code(HttpStatus.CREATED.value())
+                .message(GeneralConstant.Message.EMPLOYEE_SUCCESSFULLY_ADDED_MESSAGE)
+                .additional(anyList())
+                .build());
 
         RegistrationResponseDto actualResponse = employeeManagementService.registerEmployeeList(registrationDtoList);
 
         assertEquals(HttpStatus.CREATED.value(), actualResponse.code());
         assertEquals(HttpStatus.CREATED.name(), actualResponse.status());
         assertEquals(GeneralConstant.Message.EMPLOYEE_SUCCESSFULLY_ADDED_MESSAGE, actualResponse.message());
-        assertEquals(registrationDtoList.size(), actualResponse.additional().size());
 
         verify(userService, times(1)).registerUser(mockUser);
         verify(employeeService, times(1)).saveEmployee(mockEmployee);
@@ -111,13 +118,19 @@ class EmployeeManagementServiceTest {
         when(employeeMapper.mapToEntity(any(RegistrationEmployeeDto.class))).thenReturn(mockEmployee);
         when(employeeService.saveEmployee(any(Employee.class))).thenReturn(mockEmployee);
         when(employeeMapper.mapToDto(any(Employee.class))).thenReturn(mockEmployeeDto);
+        when(responseProvider.generateRegistrationResponse(anyList())).thenReturn(RegistrationResponseDto.builder()
+                .timestamp(new Date())
+                .status(HttpStatus.CREATED.name())
+                .code(HttpStatus.CREATED.value())
+                .message(GeneralConstant.Message.EMPLOYEE_SUCCESSFULLY_ADDED_MESSAGE)
+                .additional(anyList())
+                .build());
 
         RegistrationResponseDto actualResponse = employeeManagementService.registerEmployee(mockRegistrationDto);
 
         assertEquals(HttpStatus.CREATED.value(), actualResponse.code());
         assertEquals(HttpStatus.CREATED.name(), actualResponse.status());
         assertEquals(GeneralConstant.Message.EMPLOYEE_SUCCESSFULLY_ADDED_MESSAGE, actualResponse.message());
-        assertEquals(List.of(mockRegistrationDto).size(), actualResponse.additional().size());
 
         verify(userService, times(1)).registerUser(mockUser);
         verify(employeeService, times(1)).saveEmployee(mockEmployee);
@@ -147,22 +160,11 @@ class EmployeeManagementServiceTest {
         );
 
         when(employeeService.getAllEmployees()).thenReturn(employeeList);
-        when(employeeMapper.mapToDto(any(Employee.class)))
-                .thenAnswer(invocationOnMock -> {
-                    Employee employee = invocationOnMock.getArgument(0);
-                    return EmployeeDto.builder()
-                            .id(employee.getId())
-                            .build();
-                });
+        when(employeeListMapper.mapToDto(employeeList)).thenReturn(expectedEmployeeDtoList);
 
         List<EmployeeDto> actualEmployeeDtoList = employeeManagementService.getAllEmployees();
 
         verify(employeeService, times(1)).getAllEmployees();
-
-        for (Employee employee :
-                employeeList) {
-            verify(employeeMapper).mapToDto(employee);
-        }
 
         for (int i = 0; i < expectedEmployeeDtoList.size(); i++) {
             assertEquals(expectedEmployeeDtoList.get(i).id(),
