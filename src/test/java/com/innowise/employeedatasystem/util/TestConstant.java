@@ -4,7 +4,7 @@ package com.innowise.employeedatasystem.util;
 import lombok.experimental.UtilityClass;
 
 @UtilityClass
-public class Constant {
+public class TestConstant {
 
     public static class ApiRoutes {
         public static final String AUTH_ROUTE = "/api/auth/signIn";

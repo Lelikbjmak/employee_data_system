@@ -68,7 +68,7 @@ class EmployeeControllerTest {
     @WithMockUser(authorities = {"ROLE_USER"})
     void successGetEmployeeById(@Value(value = "${employee.id}") Long id) throws Exception {
 
-        String responseString = mockMvc.perform(get(Constant.ApiRoutes.GET_X_BY_ID, 1L)
+        String responseString = mockMvc.perform(get(TestConstant.ApiRoutes.GET_X_BY_ID, 1L)
                         .accept(MediaType.APPLICATION_JSON_VALUE))
                 .andDo(print())
                 .andExpect(status().isOk())
@@ -86,7 +86,7 @@ class EmployeeControllerTest {
 
         final long invalidId = 100L;
 
-        String responseString = mockMvc.perform(get(Constant.ApiRoutes.GET_X_BY_ID + "/" + invalidId)
+        String responseString = mockMvc.perform(get(TestConstant.ApiRoutes.GET_X_BY_ID + "/" + invalidId)
                         .accept(MediaType.APPLICATION_JSON_VALUE))
                 .andDo(print())
                 .andExpect(status().isNotFound())
@@ -104,7 +104,7 @@ class EmployeeControllerTest {
     @WithMockUser(authorities = {"ROLE_USER"})
     void successGetEmployeeByUserUsername(@Value(value = "${user.username}") String username) throws Exception {
 
-        String responseString = mockMvc.perform(get(Constant.ApiRoutes.GET_X_BY_USERNAME, username)
+        String responseString = mockMvc.perform(get(TestConstant.ApiRoutes.GET_X_BY_USERNAME, username)
                         .accept(MediaType.APPLICATION_JSON_VALUE))
                 .andDo(print())
                 .andExpect(status().isOk())
@@ -123,7 +123,7 @@ class EmployeeControllerTest {
 
         final String failedUsername = "wrongUsername";
 
-        String responseString = mockMvc.perform(get(Constant.ApiRoutes.GET_X_BY_USERNAME, failedUsername)
+        String responseString = mockMvc.perform(get(TestConstant.ApiRoutes.GET_X_BY_USERNAME, failedUsername)
                         .accept(MediaType.APPLICATION_JSON_VALUE))
                 .andDo(print())
                 .andExpect(status().isNotFound())
@@ -143,7 +143,7 @@ class EmployeeControllerTest {
 
         int size = employeeService.getAllEmployees().size();
 
-        String responseString = mockMvc.perform(get(Constant.ApiRoutes.GET_ALL_X)
+        String responseString = mockMvc.perform(get(TestConstant.ApiRoutes.GET_ALL_X)
                         .accept(MediaType.APPLICATION_JSON_VALUE))
                 .andDo(print())
                 .andExpect(status().isOk())
@@ -163,7 +163,7 @@ class EmployeeControllerTest {
 
         Assertions.assertNotNull(employeeService.getEmployeeById(id));
 
-        String responseString = mockMvc.perform(delete(Constant.ApiRoutes.DELETE_X, id)
+        String responseString = mockMvc.perform(delete(TestConstant.ApiRoutes.DELETE_X, id)
                         .contentType(MediaType.APPLICATION_JSON_VALUE)
                         .accept(MediaType.APPLICATION_JSON_VALUE))
                 .andDo(print())
@@ -186,7 +186,7 @@ class EmployeeControllerTest {
 
         Assertions.assertFalse(employeeService.getEmployeeListByIdList(employeeIdToDelete).isEmpty());
 
-        String responseString = mockMvc.perform(delete(Constant.ApiRoutes.DELETE_ALL_X)
+        String responseString = mockMvc.perform(delete(TestConstant.ApiRoutes.DELETE_ALL_X)
                         .contentType(MediaType.APPLICATION_JSON_VALUE)
                         .accept(MediaType.APPLICATION_JSON_VALUE)
                         .content(objectMapper.writeValueAsString(employeeIdToDelete)))
@@ -222,7 +222,7 @@ class EmployeeControllerTest {
         Assertions.assertNotEquals(newLastName, employeeService.getEmployeeById(1L).getLastName());
         Assertions.assertNotEquals(newLastName, employeeService.getEmployeeById(2L).getLastName());
 
-        String responseString = mockMvc.perform(put(Constant.ApiRoutes.EDIT_ALL_X)
+        String responseString = mockMvc.perform(put(TestConstant.ApiRoutes.EDIT_ALL_X)
                         .contentType(MediaType.APPLICATION_JSON_VALUE)
                         .content(objectMapper.writeValueAsString(employeeDtoListToEdit))
                         .accept(MediaType.APPLICATION_JSON_VALUE))
@@ -252,7 +252,7 @@ class EmployeeControllerTest {
 
         Assertions.assertNotEquals(newLastName, employeeService.getEmployeeById(id).getLastName());
 
-        String responseString = mockMvc.perform(put(Constant.ApiRoutes.EDIT_X, id)
+        String responseString = mockMvc.perform(put(TestConstant.ApiRoutes.EDIT_X, id)
                         .contentType(MediaType.APPLICATION_JSON_VALUE)
                         .content(objectMapper.writeValueAsString(employeeDto))
                         .accept(MediaType.APPLICATION_JSON_VALUE))
@@ -281,7 +281,7 @@ class EmployeeControllerTest {
 
         Assertions.assertNotEquals(newLastName, employeeService.getEmployeeById(id).getLastName());
 
-        String responseString = mockMvc.perform(put(Constant.ApiRoutes.EDIT_X, -1)
+        String responseString = mockMvc.perform(put(TestConstant.ApiRoutes.EDIT_X, -1)
                         .contentType(MediaType.APPLICATION_JSON_VALUE)
                         .content(objectMapper.writeValueAsString(employeeDto))
                         .accept(MediaType.APPLICATION_JSON_VALUE))
@@ -319,7 +319,7 @@ class EmployeeControllerTest {
                         .build())
                 .build();
 
-        mockMvc.perform(post(Constant.ApiRoutes.ADD_X)
+        mockMvc.perform(post(TestConstant.ApiRoutes.ADD_X)
                         .contentType(MediaType.APPLICATION_JSON_VALUE)
                         .content(objectMapper.writeValueAsString(registrationDto))
                         .accept(MediaType.APPLICATION_JSON_VALUE))
@@ -351,7 +351,7 @@ class EmployeeControllerTest {
                         .build())
                 .build();
 
-        String responseString = mockMvc.perform(post(Constant.ApiRoutes.ADD_ALL_X)
+        String responseString = mockMvc.perform(post(TestConstant.ApiRoutes.ADD_ALL_X)
                         .contentType(MediaType.APPLICATION_JSON_VALUE)
                         .content(objectMapper.writeValueAsString(List.of(registrationDto)))
                         .accept(MediaType.APPLICATION_JSON_VALUE))
@@ -391,7 +391,7 @@ class EmployeeControllerTest {
                         .build())
                 .build();
 
-        mockMvc.perform(post(Constant.ApiRoutes.ADD_ALL_X)
+        mockMvc.perform(post(TestConstant.ApiRoutes.ADD_ALL_X)
                         .contentType(MediaType.APPLICATION_JSON_VALUE)
                         .content(objectMapper.writeValueAsString(List.of(registrationDto)))
                         .accept(MediaType.APPLICATION_JSON_VALUE))
@@ -427,7 +427,7 @@ class EmployeeControllerTest {
                         .build())
                 .build();
 
-        mockMvc.perform(post(Constant.ApiRoutes.ADD_ALL_X)
+        mockMvc.perform(post(TestConstant.ApiRoutes.ADD_ALL_X)
                         .contentType(MediaType.APPLICATION_JSON_VALUE)
                         .content(objectMapper.writeValueAsString(List.of(registrationDto)))
                         .accept(MediaType.APPLICATION_JSON_VALUE))
@@ -461,7 +461,7 @@ class EmployeeControllerTest {
                         .build())
                 .build();
 
-        String response = mockMvc.perform(post(Constant.ApiRoutes.ADD_ALL_X)
+        String response = mockMvc.perform(post(TestConstant.ApiRoutes.ADD_ALL_X)
                         .contentType(MediaType.APPLICATION_JSON_VALUE)
                         .content(objectMapper.writeValueAsString(List.of(registrationDto)))
                         .accept(MediaType.APPLICATION_JSON_VALUE))
@@ -503,7 +503,7 @@ class EmployeeControllerTest {
                         .build())
                 .build();
 
-        String response = mockMvc.perform(post(Constant.ApiRoutes.ADD_ALL_X)
+        String response = mockMvc.perform(post(TestConstant.ApiRoutes.ADD_ALL_X)
                         .contentType(MediaType.APPLICATION_JSON_VALUE)
                         .content(objectMapper.writeValueAsString(List.of(registrationDto)))
                         .accept(MediaType.APPLICATION_JSON_VALUE))
@@ -537,7 +537,7 @@ class EmployeeControllerTest {
                         .build())
                 .build();
 
-        String response = mockMvc.perform(post(Constant.ApiRoutes.ADD_ALL_X)
+        String response = mockMvc.perform(post(TestConstant.ApiRoutes.ADD_ALL_X)
                         .contentType(MediaType.APPLICATION_JSON_VALUE)
                         .content(objectMapper.writeValueAsString(List.of(registrationDto)))
                         .accept(MediaType.APPLICATION_JSON_VALUE))
@@ -574,7 +574,7 @@ class EmployeeControllerTest {
                         .build())
                 .build();
 
-        String response = mockMvc.perform(post(Constant.ApiRoutes.ADD_ALL_X)
+        String response = mockMvc.perform(post(TestConstant.ApiRoutes.ADD_ALL_X)
                         .contentType(MediaType.APPLICATION_JSON_VALUE)
                         .content(objectMapper.writeValueAsString(List.of(registrationDto)))
                         .accept(MediaType.APPLICATION_JSON_VALUE))
@@ -596,7 +596,7 @@ class EmployeeControllerTest {
     @Sql(value = "/sql/truncate-tables.sql", executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
     void requestBodyIsMissed() throws Exception {
 
-        String response = mockMvc.perform(post(Constant.ApiRoutes.ADD_X)
+        String response = mockMvc.perform(post(TestConstant.ApiRoutes.ADD_X)
                         .contentType(MediaType.APPLICATION_JSON_VALUE)
                         .accept(MediaType.APPLICATION_JSON_VALUE))
                 .andDo(print())
@@ -614,7 +614,7 @@ class EmployeeControllerTest {
     @Sql(value = "/sql/truncate-tables.sql", executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
     void requestBodyIsEmpty() throws Exception {
 
-        String response = mockMvc.perform(post(Constant.ApiRoutes.ADD_X)
+        String response = mockMvc.perform(post(TestConstant.ApiRoutes.ADD_X)
                         .contentType(MediaType.APPLICATION_JSON_VALUE)
                         .content("{}")
                         .accept(MediaType.APPLICATION_JSON_VALUE))
