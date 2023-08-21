@@ -1,7 +1,7 @@
 package com.innowise.employeedatasystem.controller;
 
 import com.innowise.employeedatasystem.dto.*;
-import com.innowise.employeedatasystem.serviceimpl.EmployeeManagementServiceImpl;
+import com.innowise.employeedatasystem.service.EmployeeManagementService;
 import com.innowise.employeedatasystem.util.ApiConstant;
 import com.innowise.employeedatasystem.util.EntityConstant;
 import jakarta.servlet.http.HttpServletRequest;
@@ -22,7 +22,7 @@ import java.util.List;
 @RequestMapping(value = ApiConstant.ApiMappings.EMPLOYEE_ROUT)
 public class EmployeeController {
 
-    private final EmployeeManagementServiceImpl employeeManagementService;
+    private final EmployeeManagementService employeeManagementService;
 
     @PostMapping(value = ApiConstant.ApiPath.ADD_ALL_X)
     @ResponseStatus(HttpStatus.CREATED)

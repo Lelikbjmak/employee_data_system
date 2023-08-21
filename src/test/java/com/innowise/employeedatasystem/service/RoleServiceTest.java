@@ -4,7 +4,7 @@ import com.innowise.employeedatasystem.entity.Role;
 import com.innowise.employeedatasystem.entity.RoleEnum;
 import com.innowise.employeedatasystem.exception.RoleIsNotFoundException;
 import com.innowise.employeedatasystem.repo.RoleRepository;
-import com.innowise.employeedatasystem.serviceimpl.RoleServiceImpl;
+import com.innowise.employeedatasystem.service.impl.RoleServiceImpl;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -23,14 +23,6 @@ class RoleServiceTest {
 
     @InjectMocks
     private RoleServiceImpl roleService;
-
-    @Test
-    @Order(1)
-    @DisplayName(value = "Context loads")
-    void contextLoadsTest() {
-        Assertions.assertNotNull(roleRepository);
-        Assertions.assertNotNull(roleService);
-    }
 
     @Test
     @Order(2)

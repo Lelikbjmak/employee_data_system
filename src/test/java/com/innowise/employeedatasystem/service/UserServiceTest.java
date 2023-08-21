@@ -3,7 +3,7 @@ package com.innowise.employeedatasystem.service;
 import com.innowise.employeedatasystem.entity.User;
 import com.innowise.employeedatasystem.exception.UserIsNotFoundException;
 import com.innowise.employeedatasystem.repo.UserRepository;
-import com.innowise.employeedatasystem.serviceimpl.UserServiceImpl;
+import com.innowise.employeedatasystem.service.impl.UserServiceImpl;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;

@@ -3,7 +3,7 @@ package com.innowise.employeedatasystem.service;
 import com.innowise.employeedatasystem.entity.User;
 import com.innowise.employeedatasystem.exception.InvalidTokenException;
 import com.innowise.employeedatasystem.security.ApplicationUserDetails;
-import com.innowise.employeedatasystem.serviceimpl.JwtServiceImpl;
+import com.innowise.employeedatasystem.service.impl.JwtServiceImpl;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.io.Decoders;

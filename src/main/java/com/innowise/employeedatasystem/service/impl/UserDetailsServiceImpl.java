@@ -1,4 +1,4 @@
-package com.innowise.employeedatasystem.serviceimpl;
+package com.innowise.employeedatasystem.service.impl;
 
 import com.innowise.employeedatasystem.entity.User;
 import com.innowise.employeedatasystem.repo.UserRepository;

@@ -6,7 +6,7 @@ import com.innowise.employeedatasystem.EmployeeDataSystemApplication;
 import com.innowise.employeedatasystem.dto.*;
 import com.innowise.employeedatasystem.entity.RoleEnum;
 import com.innowise.employeedatasystem.exception.EmployeeIsNotFoundException;
-import com.innowise.employeedatasystem.serviceimpl.EmployeeServiceImpl;
+import com.innowise.employeedatasystem.service.impl.EmployeeServiceImpl;
 import com.innowise.employeedatasystem.util.*;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.ExtendWith;

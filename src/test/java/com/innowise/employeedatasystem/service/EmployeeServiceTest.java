@@ -3,7 +3,7 @@ package com.innowise.employeedatasystem.service;
 import com.innowise.employeedatasystem.entity.Employee;
 import com.innowise.employeedatasystem.exception.EmployeeIsNotFoundException;
 import com.innowise.employeedatasystem.repo.EmployeeRepository;
-import com.innowise.employeedatasystem.serviceimpl.EmployeeServiceImpl;
+import com.innowise.employeedatasystem.service.impl.EmployeeServiceImpl;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;

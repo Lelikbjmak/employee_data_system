@@ -3,7 +3,7 @@ package com.innowise.employeedatasystem.service;
 import com.innowise.employeedatasystem.entity.User;
 import com.innowise.employeedatasystem.repo.UserRepository;
 import com.innowise.employeedatasystem.security.ApplicationUserDetails;
-import com.innowise.employeedatasystem.serviceimpl.UserDetailsServiceImpl;
+import com.innowise.employeedatasystem.service.impl.UserDetailsServiceImpl;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;

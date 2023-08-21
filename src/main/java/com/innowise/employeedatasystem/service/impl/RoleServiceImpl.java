@@ -1,4 +1,4 @@
-package com.innowise.employeedatasystem.serviceimpl;
+package com.innowise.employeedatasystem.service.impl;
 
 import com.innowise.employeedatasystem.entity.Role;
 import com.innowise.employeedatasystem.entity.RoleEnum;
