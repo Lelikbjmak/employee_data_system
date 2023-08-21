@@ -1,4 +1,4 @@
-FROM openjdk:alpine-17
+FROM openjdk:17-alpine
 
 LABEL authors="Denis Solovey"
 

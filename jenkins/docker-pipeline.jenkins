@@ -12,7 +12,7 @@ pipeline {
         stage("docker build") {
             steps {
                 dir("")
-                sh 'docker build -t employee-data-service -f ../Dockerfile'
+                sh 'docker build -t employee-data-service -f ../Dockerfile .'
             }
         }
         stage("message") {
