@@ -10,9 +10,11 @@ pipeline {
     stages {
         stage("docker build") {
             steps {
-                script {
-                    def dockerImageName = 'employee-data-service'
-                    sh "docker build -t ${dockerImageName} ."
+                container('docker') {
+                    script {
+                        def dockerImageName = 'employee-data-service'
+                        sh "docker build -t ${dockerImageName} ."
+                    }
                 }
             }
         }
