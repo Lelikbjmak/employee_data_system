@@ -38,8 +38,10 @@ pipeline {
             steps {
                 container('docker') {
                     script {
-                        def dockerImageName = 'employee-data-service'
-                        sh "docker build -t ${dockerImageName} -f ../../Dockerfile ."
+                        dir('../../') {
+                            def dockerImageName = 'employee-data-service'
+                            sh "docker build -t ${dockerImageName} ."
+                        }
                     }
                 }
             }
