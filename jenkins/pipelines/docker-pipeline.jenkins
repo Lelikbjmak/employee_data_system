@@ -39,7 +39,7 @@ pipeline {
                 container('docker') {
                     script {
                         def dockerImageName = 'employee-data-service'
-                        sh "docker build -t ${dockerImageName} ."
+                        sh "docker build -t ${dockerImageName} -f ../../Dockerfile ."
                     }
                 }
             }
